@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG 图表编辑器</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans SC', sans-serif; background: #1a1a1a; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; }
+
+/* 顶部工具栏 */
+.toolbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 16px; background: #222; border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+.toolbar h1 { font-size: 14px; font-weight: 600; color: #aaa; margin-right: 12px; }
+.toolbar button, .toolbar select {
+  padding: 6px 12px; border: 1px solid #444; border-radius: 4px;
+  background: #333; color: #e0e0e0; font-size: 12px; cursor: pointer;
+}
+.toolbar button:hover { background: #444; }
+.toolbar button.primary { background: #1565C0; border-color: #1565C0; }
+.toolbar button.primary:hover { background: #1976D2; }
+.toolbar .sep { width: 1px; height: 24px; background: #444; }
+.toolbar .file-info { font-size: 11px; color: #888; }
+
+/* 主区域 */
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* 左侧文件列表 */
+.sidebar {
+  width: 240px; background: #222; border-right: 1px solid #333;
+  overflow-y: auto; flex-shrink: 0;
+}
+.sidebar h2 { font-size: 11px; color: #666; padding: 10px 12px 6px; text-transform: uppercase; letter-spacing: 1px; }
+.sidebar .file-list { list-style: none; }
+.sidebar .file-list li {
+  padding: 6px 12px; font-size: 12px; cursor: pointer;
+  border-left: 3px solid transparent; color: #bbb;
+}
+.sidebar .file-list li:hover { background: #2a2a2a; }
+.sidebar .file-list li.active { background: #1a3a5c; border-left-color: #1565C0; color: #fff; }
+.sidebar .file-list li .badge {
+  display: inline-block; padding: 1px 5px; border-radius: 3px;
+  font-size: 9px; margin-left: 6px;
+}
+.sidebar .badge.ok { background: #1b4332; color: #66BB6A; }
+.sidebar .badge.warn { background: #3d2d15; color: #FFB74D; }
+.sidebar .badge.err { background: #3d1520; color: #EF9A9A; }
+
+/* 编辑区 */
+.editor-area {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+}
+.editor-tabs {
+  display: flex; background: #222; border-bottom: 1px solid #333; flex-shrink: 0;
+}
+.editor-tabs .tab {
+  padding: 8px 16px; font-size: 12px; cursor: pointer;
+  border-bottom: 2px solid transparent; color: #888;
+}
+.editor-tabs .tab.active { color: #fff; border-bottom-color: #1565C0; }
+.editor-tabs .tab:hover { color: #ccc; }
+
+/* SVG 预览 */
+.preview-container {
+  flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center;
+  background: #fff; /* 跟随主题切换 */
+  position: relative;
+}
+.preview-container.dark { background: #1a1a1a; }
+.preview-container svg { max-width: 100%; max-height: 100%; }
+
+/* 代码编辑器 */
+.code-editor {
+  flex: 1; display: none; overflow: hidden;
+}
+.code-editor.active { display: flex; }
+.code-editor textarea {
+  flex: 1; background: #1e1e1e; color: #d4d4d4; border: none;
+  padding: 16px; font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px; line-height: 1.6; resize: none; outline: none;
+  tab-size: 2;
+}
+
+/* 右侧属性面板 */
+.props-panel {
+  width: 260px; background: #222; border-left: 1px solid #333;
+  overflow-y: auto; flex-shrink: 0; padding: 12px;
+}
+.props-panel h3 { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.props-panel .color-map { list-style: none; }
+.props-panel .color-map li {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 0; font-size: 11px;
+}
+.props-panel .color-swatch {
+  width: 16px; height: 16px; border-radius: 3px; border: 1px solid #555;
+  flex-shrink: 0;
+}
+.props-panel .color-hex { font-family: monospace; color: #aaa; width: 60px; }
+.props-panel .color-var { font-family: monospace; color: #66BB6A; font-size: 10px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.props-panel .btn-replace {
+  padding: 3px 8px; border: 1px solid #444; border-radius: 3px;
+  background: #333; color: #e0e0e0; font-size: 10px; cursor: pointer;
+}
+.props-panel .btn-replace:hover { background: #444; }
+.props-panel .btn-replace-all {
+  width: 100%; padding: 8px; margin-top: 12px;
+  background: #1565C0; border: none; border-radius: 4px;
+  color: #fff; font-size: 12px; cursor: pointer;
+}
+.props-panel .btn-replace-all:hover { background: #1976D2; }
+
+/* 状态栏 */
+.statusbar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 4px 16px; background: #222; border-top: 1px solid #333;
+  font-size: 11px; color: #666; flex-shrink: 0;
+}
+
+/* 主题切换预览 */
+.theme-toggle {
+  display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888;
+}
+.theme-toggle input[type="checkbox"] { accent-color: #1565C0; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>📐 SVG 编辑器</h1>
+  <button onclick="openFile()">📂 打开</button>
+  <button class="primary" onclick="saveFile()">💾 保存</button>
+  <div class="sep"></div>
+  <button onclick="replaceColors()">🎨 替换色值→CSS变量</button>
+  <button onclick="restoreColors()">↩️ CSS变量→色值</button>
+  <div class="sep"></div>
+  <div class="theme-toggle">
+    <input type="checkbox" id="themeToggle" onchange="togglePreviewTheme()">
+    <label for="themeToggle">暗色预览</label>
+  </div>
+  <div class="sep"></div>
+  <span class="file-info" id="fileInfo">未打开文件</span>
+  <input type="file" id="fileInput" accept=".svg" style="display:none" onchange="handleFile(event)">
+</div>
+
+<div class="main">
+  <!-- 左侧文件列表 -->
+  <div class="sidebar">
+    <h2>图表文件</h2>
+    <ul class="file-list" id="fileList"></ul>
+  </div>
+
+  <!-- 编辑区 -->
+  <div class="editor-area">
+    <div class="editor-tabs">
+      <div class="tab active" onclick="switchTab('preview')">预览</div>
+      <div class="tab" onclick="switchTab('code')">代码</div>
+    </div>
+    <div class="preview-container" id="previewContainer"></div>
+    <div class="code-editor" id="codeEditor">
+      <textarea id="codeArea" spellcheck="false" oninput="onCodeChange()"></textarea>
+    </div>
+  </div>
+
+  <!-- 右侧属性面板 -->
+  <div class="props-panel">
+    <h3>色值映射</h3>
+    <p style="font-size:11px;color:#666;margin-bottom:12px;">
+      当前 SVG 中的硬编码色值。<br>
+      点击「替换色值→CSS变量」将色值替换为项目的 CSS 变量。
+    </p>
+    <ul class="color-map" id="colorMap"></ul>
+    <button class="btn-replace-all" onclick="replaceColors()">🎨 全部替换为 CSS 变量</button>
+
+    <h3 style="margin-top:20px;">布局校验</h3>
+    <button class="btn-replace-all" style="background:#2E7D32" onclick="checkLayout()">🔍 检查布局问题</button>
+    <div id="layoutResult" style="margin-top:8px;font-size:11px;"></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusFile">-</span>
+  <span id="statusSize">-</span>
+  <span id="statusColors">-</span>
+  <span id="statusLayout">-</span>
+</div>
+
+<script>
+// ── 色值映射表 ──────────────────────────────────────────
+const COLOR_MAP = {
+  '#E3F2FD': '--diagram-accent-bg-1', '#1565C0': '--diagram-accent-1', '#0D47A1': '--diagram-accent-text-1',
+  '#E8F5E9': '--diagram-accent-bg-2', '#2E7D32': '--diagram-accent-2', '#1B5E20': '--diagram-accent-text-2',
+  '#F3E5F5': '--diagram-accent-bg-3', '#7B1FA2': '--diagram-accent-3', '#4A148C': '--diagram-accent-text-3',
+  '#FFF3E0': '--diagram-accent-bg-4', '#E65100': '--diagram-accent-4', '#BF360C': '--diagram-accent-text-4',
+  '#FFCDD2': '--diagram-accent-bg-5', '#C62828': '--diagram-accent-5', '#B71C1C': '--diagram-accent-text-5',
+  '#FFFFFF': '--diagram-surface-1', '#F8F9FA': '--diagram-surface-2', '#ECEFF1': '--diagram-surface-3',
+  '#BDBDBD': '--diagram-stroke-1', '#E0E0E0': '--diagram-stroke-2',
+  '#333333': '--diagram-text-1', '#666666': '--diagram-text-2', '#888888': '--diagram-text-3',
+  '#555555': '--diagram-arrow',
+  '#E3E9FD': '--diagram-accent-bg-1b', '#BBDEFB': '--diagram-accent-bg-1b',
+  '#C8E6C9': '--diagram-accent-bg-2b', '#E1BEE7': '--diagram-accent-bg-3b',
+};
+
+let currentFile = null;
+let currentContent = '';
+let isDirty = false;
+
+// ── 文件列表 ──────────────────────────────────────────
+async function loadFileList() {
+  // 使用预定义的 SVG 文件列表（从项目扫描）
+  const res = await fetch('/__openclaw__/svg-list.json').catch(() => null);
+  let files = [];
+  if (res && res.ok) {
+    files = await res.json();
+  } else {
+    // 备用：手动列出已知文件
+    files = [
+      'arch-evolution.svg', 'bio-thread-timeline.svg', 'buffer-ops.svg',
+      'concurrency-layered-arch.svg', 'data-journey.svg', 'db-performance-overview.svg',
+      'hexagonal-arch.svg', 'http-evolution.svg', 'java-compile-pipeline.svg',
+      'jmm-memory-model.svg', 'jvm-object-creation.svg', 'netty-pipeline.svg',
+      'orm-mapping.svg', 'spring-bean-lifecycle.svg', 'spring-mvc-flow.svg',
+    ];
+  }
+  const list = document.getElementById('fileList');
+  list.innerHTML = files.map(f => `<li onclick="loadSvg('${f}')">${f}</li>`).join('');
+}
+
+// ── 文件操作 ──────────────────────────────────────────
+function openFile() { document.getElementById('fileInput').click(); }
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    currentFile = file.name;
+    currentContent = ev.target.result;
+    renderSvg();
+    updateFileInfo();
+    detectColors();
+  };
+  reader.readAsText(file);
+}
+
+async function loadSvg(filename) {
+  try {
+    const res = await fetch(`/diagrams/${filename}`);
+    if (!res.ok) throw new Error('加载失败');
+    currentFile = filename;
+    currentContent = await res.text();
+    renderSvg();
+    updateFileInfo();
+    detectColors();
+    // 高亮文件列表
+    document.querySelectorAll('.file-list li').forEach(li => {
+      li.classList.toggle('active', li.textContent.includes(filename));
+    });
+  } catch (e) {
+    alert('无法加载文件: ' + e.message);
+  }
+}
+
+function renderSvg() {
+  const container = document.getElementById('previewContainer');
+  container.innerHTML = currentContent;
+  const svg = container.querySelector('svg');
+  if (svg) {
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    svg.style.maxWidth = '100%';
+    svg.style.maxHeight = '100%';
+  }
+  document.getElementById('codeArea').value = currentContent;
+}
+
+function updateFileInfo() {
+  document.getElementById('fileInfo').textContent = currentFile || '未打开文件';
+  document.getElementById('statusFile').textContent = currentFile || '-';
+  document.getElementById('statusSize').textContent = `${(currentContent.length / 1024).toFixed(1)} KB`;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (tab === 'preview') {
+    document.querySelector('.tab:first-child').classList.add('active');
+    document.getElementById('previewContainer').style.display = 'flex';
+    document.getElementById('codeEditor').classList.remove('active');
+    renderSvg();
+  } else {
+    document.querySelector('.tab:last-child').classList.add('active');
+    document.getElementById('previewContainer').style.display = 'none';
+    document.getElementById('codeEditor').classList.add('active');
+  }
+}
+
+function onCodeChange() {
+  currentContent = document.getElementById('codeArea').value;
+  isDirty = true;
+}
+
+// ── 主题切换 ──────────────────────────────────────────
+function togglePreviewTheme() {
+  const dark = document.getElementById('themeToggle').checked;
+  const container = document.getElementById('previewContainer');
+  container.classList.toggle('dark', dark);
+  // 注入 CSS 变量
+  let style = container.querySelector('style');
+  if (!style) {
+    style = document.createElement('style');
+    container.prepend(style);
+  }
+  if (dark) {
+    style.textContent = `
+      :root {
+        --diagram-surface-1: #1a1a1a; --diagram-surface-2: #222; --diagram-surface-3: #2a2a2a;
+        --diagram-stroke-1: #444; --diagram-stroke-2: #333;
+        --diagram-text-1: #e0e0e0; --diagram-text-2: #b0b0b0; --diagram-text-3: #808080;
+        --diagram-arrow: #b0b0b0; --diagram-ghost: #666;
+        --diagram-accent-1: #5C9CE6; --diagram-accent-bg-1: #0d2137; --diagram-accent-bg-1b: #1a3a5c; --diagram-accent-text-1: #90CAF9;
+        --diagram-accent-2: #66BB6A; --diagram-accent-bg-2: #0d2818; --diagram-accent-bg-2b: #1b4332; --diagram-accent-text-2: #A5D6A7;
+        --diagram-accent-3: #CE93D8; --diagram-accent-bg-3: #2d1b3d; --diagram-accent-bg-3b: #3d2550; --diagram-accent-text-3: #E1BEE7;
+        --diagram-accent-4: #FFB74D; --diagram-accent-bg-4: #3d2d15; --diagram-accent-text-4: #FFCC80;
+        --diagram-accent-5: #EF9A9A; --diagram-accent-bg-5: #3d1520; --diagram-accent-text-5: #FFCDD2;
+      }
+    `;
+  } else {
+    style.textContent = `
+      :root {
+        --diagram-surface-1: #ffffff; --diagram-surface-2: #f8f9fa; --diagram-surface-3: #ECEFF1;
+        --diagram-stroke-1: #BDBDBD; --diagram-stroke-2: #E0E0E0;
+        --diagram-text-1: #333333; --diagram-text-2: #666666; --diagram-text-3: #888888;
+        --diagram-arrow: #555555; --diagram-ghost: #999999;
+        --diagram-accent-1: #1565C0; --diagram-accent-bg-1: #E3F2FD; --diagram-accent-bg-1b: #BBDEFB; --diagram-accent-text-1: #0D47A1;
+        --diagram-accent-2: #2E7D32; --diagram-accent-bg-2: #E8F5E9; --diagram-accent-bg-2b: #C8E6C9; --diagram-accent-text-2: #1B5E20;
+        --diagram-accent-3: #7B1FA2; --diagram-accent-bg-3: #F3E5F5; --diagram-accent-bg-3b: #E1BEE7; --diagram-accent-text-3: #4A148C;
+        --diagram-accent-4: #E65100; --diagram-accent-bg-4: #FFF3E0; --diagram-accent-text-4: #BF360C;
+        --diagram-accent-5: #C62828; --diagram-accent-bg-5: #FFCDD2; --diagram-accent-text-5: #B71C1C;
+      }
+    `;
+  }
+}
+
+// ── 色值检测与替换 ──────────────────────────────────────
+function detectColors() {
+  const hexColors = [...currentContent.matchAll(/#[0-9a-fA-F]{6}/g)].map(m => m[0]);
+  const unique = [...new Set(hexColors.map(c => c.toUpperCase()))];
+  const map = document.getElementById('colorMap');
+  map.innerHTML = unique.map(hex => {
+    const cssVar = COLOR_MAP[hex.toUpperCase()] || COLOR_MAP[hex.toLowerCase()] || null;
+    return `<li>
+      <span class="color-swatch" style="background:${hex}"></span>
+      <span class="color-hex">${hex}</span>
+      ${cssVar ? `<span class="color-var">var(${cssVar})</span>` : '<span style="color:#666;font-size:10px">未映射</span>'}
+    </li>`;
+  }).join('');
+  document.getElementById('statusColors').textContent = `${unique.length} 个色值`;
+}
+
+function replaceColors() {
+  let count = 0;
+  for (const [hex, cssVar] of Object.entries(COLOR_MAP)) {
+    const regex = new RegExp(hex.replace('#', '#'), 'gi');
+    currentContent = currentContent.replace(regex, (match) => {
+      count++;
+      return `var(${cssVar})`;
+    });
+  }
+  renderSvg();
+  detectColors();
+  isDirty = true;
+  document.getElementById('statusLayout').textContent = `已替换 ${count} 处`;
+}
+
+function restoreColors() {
+  let count = 0;
+  for (const [hex, cssVar] of Object.entries(COLOR_MAP)) {
+    const regex = new RegExp(`var\\(${cssVar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`, 'g');
+    currentContent = currentContent.replace(regex, () => { count++; return hex; });
+  }
+  renderSvg();
+  detectColors();
+  isDirty = true;
+  document.getElementById('statusLayout').textContent = `已还原 ${count} 处`;
+}
+
+// ── 保存 ──────────────────────────────────────────────
+function saveFile() {
+  if (!currentFile) return;
+  const blob = new Blob([currentContent], { type: 'image/svg+xml' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = currentFile;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  isDirty = false;
+}
+
+// ── 布局校验（简化版）──────────────────────────────────
+function checkLayout() {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(currentContent, 'image/svg+xml');
+  const texts = doc.querySelectorAll('text');
+  const rects = doc.querySelectorAll('rect');
+  const issues = [];
+
+  // 简单检测重叠
+  const textBBoxes = [];
+  texts.forEach(t => {
+    const x = parseFloat(t.getAttribute('x') || 0);
+    const y = parseFloat(t.getAttribute('y') || 0);
+    const fs = parseFloat(t.getAttribute('font-size') || 11);
+    const w = (t.textContent || '').length * fs * 0.6;
+    textBBoxes.push({ x: x - w/2, y: y - fs, w, h: fs * 1.3, text: t.textContent });
+  });
+
+  for (let i = 0; i < textBBoxes.length; i++) {
+    for (let j = i + 1; j < textBBoxes.length; j++) {
+      const a = textBBoxes[i], b = textBBoxes[j];
+      if (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y) {
+        issues.push(`重叠: "${a.text}" ↔ "${b.text}"`);
+      }
+    }
+  }
+
+  const result = document.getElementById('layoutResult');
+  if (issues.length === 0) {
+    result.innerHTML = '<span style="color:#66BB6A">✅ 无布局问题</span>';
+  } else {
+    result.innerHTML = issues.slice(0, 5).map(i => `<div style="color:#EF9A9A;margin:2px 0">⚠️ ${i}</div>`).join('');
+    if (issues.length > 5) result.innerHTML += `<div style="color:#888">...还有 ${issues.length - 5} 个</div>`;
+  }
+  document.getElementById('statusLayout').textContent = issues.length ? `${issues.length} 个问题` : '无问题';
+}
+
+// ── 初始化 ──────────────────────────────────────────────
+loadFileList();
+togglePreviewTheme(); // 初始化亮色主题
+</script>
+</body>
+</html>

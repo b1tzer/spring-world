@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#g1)"/>
+  <!-- Globe grid lines -->
+  <ellipse cx="64" cy="64" rx="42" ry="60" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <ellipse cx="64" cy="64" rx="20" ry="60" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <line x1="4" y1="64" x2="124" y2="64" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <ellipse cx="64" cy="35" rx="48" ry="10" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <ellipse cx="64" cy="93" rx="48" ry="10" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <!-- Coffee cup -->
+  <g transform="translate(64,64)">
+    <!-- Cup body -->
+    <path d="M-18,-10 L-14,18 L14,18 L18,-10 Z" fill="white" rx="2"/>
+    <!-- Cup rim -->
+    <rect x="-20" y="-14" width="40" height="6" rx="3" fill="white"/>
+    <!-- Handle -->
+    <path d="M18,-6 Q30,-6 30,4 Q30,14 18,14" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Steam -->
+    <path d="M-6,-20 Q-8,-28 -4,-32" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M2,-20 Q0,-30 4,-34" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M10,-18 Q8,-26 12,-30" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

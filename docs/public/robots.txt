@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://thestack.xpro.wang/java-world/sitemap.xml

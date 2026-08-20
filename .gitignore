@@ -1,0 +1,72 @@
+## Dependencies
+node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
+jspm_packages/
+
+## Build output
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+dist/
+build/
+out/
+.output/
+.nuxt/
+.next/
+.vite/
+.turbo/
+.parcel-cache/
+
+## Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs/
+
+## Env & secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+*.pem
+*.key
+
+## Cache & temp
+.cache/
+.temp/
+.tmp/
+tmp/
+temp/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+coverage/
+.nyc_output/
+
+## Editors & IDE
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.codebuddy/
+
+## OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## Playwright MCP
+.playwright-mcp/
+

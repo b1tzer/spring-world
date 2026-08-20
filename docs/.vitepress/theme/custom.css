@@ -1,0 +1,330 @@
+/* ============================================
+   Java World — VitePress 自定义样式
+   ============================================ */
+
+/* ---------- 品牌色 ---------- */
+:root {
+  --vp-c-brand-1: #2563eb;
+  --vp-c-brand-2: #1d4ed8;
+  --vp-c-brand-3: #1e40af;
+  --vp-c-brand-soft: rgba(37, 99, 235, 0.12);
+
+  /* Hero 渐变 */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #2563eb 30%, #7c3aed 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, #2563eb30 50%, #7c3aed30 50%);
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+.dark {
+  --vp-c-brand-1: #60a5fa;
+  --vp-c-brand-2: #3b82f6;
+  --vp-c-brand-3: #93c5fd;
+  --vp-c-brand-soft: rgba(96, 165, 250, 0.12);
+}
+
+/* ---------- 全局排版 ---------- */
+.vp-doc {
+  line-height: 1.8;
+}
+
+.vp-doc h1 {
+  font-size: 2em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  border-bottom: 2px solid var(--vp-c-brand-1);
+  padding-bottom: 0.4em;
+}
+
+.vp-doc h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 2.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+}
+
+/* ---------- 引用块 ---------- */
+.vp-doc blockquote {
+  border-left: 4px solid var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  color: var(--vp-c-text-2);
+}
+
+/* ---------- 代码块 ---------- */
+.vp-doc div[class*='language-'] {
+  border-radius: 10px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc div[class*='language-'] code {
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+/* 内联代码 */
+.vp-doc :not(pre) > code {
+  font-size: 0.875em;
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}
+
+/* ---------- 表格 ---------- */
+.vp-doc table {
+  font-size: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc th {
+  background: var(--vp-c-brand-soft);
+  font-weight: 600;
+  color: var(--vp-c-brand-1);
+}
+
+.vp-doc tr:hover td {
+  background: var(--vp-c-bg-soft);
+}
+
+/* ---------- 首页特性卡片 ---------- */
+.VPFeature {
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  transition: all 0.3s ease;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
+}
+
+.VPFeature .title {
+  font-weight: 600;
+}
+
+/* ---------- Hero 区域 ---------- */
+.VPHero .name {
+  font-weight: 800;
+}
+
+.VPHero .text {
+  font-size: 1.2em;
+  color: var(--vp-c-text-2);
+}
+
+.VPHero .tagline {
+  font-size: 1.05em;
+  color: var(--vp-c-text-3);
+}
+
+/* ---------- 侧边栏 ---------- */
+.VPSidebar .group .title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.VPSidebar .link {
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.VPSidebar .link:hover {
+  background: var(--vp-c-brand-soft);
+}
+
+.VPSidebar .link.active {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}
+
+/* ---------- 导航栏 ---------- */
+.VPNavBar .title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* ---------- 页脚 ---------- */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+/* ---------- 大纲（右侧目录）---------- */
+.VPDocOutline .outline-title {
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--vp-c-text-3);
+}
+
+/* ---------- 上下页导航 ---------- */
+.VPDocFooter .pager .title {
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+  transition: color 0.2s;
+}
+
+.VPDocFooter .pager:hover .title {
+  color: var(--vp-c-brand-1);
+}
+
+/* ---------- 搜索框 ---------- */
+.VPLocalSearchBox {
+  border-radius: 10px;
+}
+
+/* ---------- 适配暗色模式 ---------- */
+.dark .VPFeature:hover {
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.08);
+}
+
+/* ---------- SVG 语义化配色方案 ----------
+   规则：按用途命名，不按颜色命名
+   所有 SVG 图表统一引用这套变量，一次定义全局生效
+   
+   命名规范：
+     --diagram-surface-N    背景面（N=1 主体, 2 次要, 3 三层）
+     --diagram-stroke-N     边框线（N=1 主体, 2 次要）
+     --diagram-text-N       文字（N=1 主体, 2 次要, 3 注释）
+     --diagram-accent-N     强调色（N=1 主蓝, 2 主绿, 3 主紫, 4 主橙, 5 主红）
+     --diagram-accent-bg-N  强调背景（对应 accent 色系的浅色背景）
+     --diagram-arrow        箭头/连线
+     --diagram-ghost        已读/不可用/占位
+*/
+:root {
+  /* 背景面 */
+  --diagram-surface-1: #ffffff;
+  --diagram-surface-2: #f8f9fa;
+  --diagram-surface-3: #ECEFF1;
+
+  /* 边框线 */
+  --diagram-stroke-1: #BDBDBD;
+  --diagram-stroke-2: #E0E0E0;
+
+  /* 文字 */
+  --diagram-text-1: #333333;
+  --diagram-text-2: #666666;
+  --diagram-text-3: #888888;
+
+  /* 强调色 — 蓝（主流程/Channel/网络层） */
+  --diagram-accent-1: #1565C0;
+  --diagram-accent-bg-1: #E3F2FD;
+  --diagram-accent-bg-1b: #BBDEFB;
+  --diagram-accent-text-1: #0D47A1;
+
+  /* 强调色 — 绿（数据/Buffer/成功） */
+  --diagram-accent-2: #2E7D32;
+  --diagram-accent-bg-2: #E8F5E9;
+  --diagram-accent-bg-2b: #C8E6C9;
+  --diagram-accent-text-2: #1B5E20;
+
+  /* 强调色 — 紫（Selector/Reactor/高级特性） */
+  --diagram-accent-3: #7B1FA2;
+  --diagram-accent-bg-3: #F3E5F5;
+  --diagram-accent-bg-3b: #E1BEE7;
+  --diagram-accent-text-3: #4A148C;
+
+  /* 强调色 — 橙（警告/position 标记） */
+  --diagram-accent-4: #E65100;
+  --diagram-accent-bg-4: #FFF3E0;
+  --diagram-accent-text-4: #BF360C;
+
+  /* 强调色 — 红（错误/limit/阻塞/危险） */
+  --diagram-accent-5: #C62828;
+  --diagram-accent-bg-5: #FFCDD2;
+  --diagram-accent-text-5: #B71C1C;
+
+  /* 箭头/连线 */
+  --diagram-arrow: #555555;
+
+  /* 幽灵态（已读/不可用/占位） */
+  --diagram-ghost: #999999;
+}
+
+.dark {
+  --diagram-surface-1: #1a1a1a;
+  --diagram-surface-2: #222222;
+  --diagram-surface-3: #2a2a2a;
+
+  --diagram-stroke-1: #444444;
+  --diagram-stroke-2: #333333;
+
+  --diagram-text-1: #e0e0e0;
+  --diagram-text-2: #b0b0b0;
+  --diagram-text-3: #808080;
+
+  --diagram-accent-1: #5C9CE6;
+  --diagram-accent-bg-1: #0d2137;
+  --diagram-accent-bg-1b: #1a3a5c;
+  --diagram-accent-text-1: #90CAF9;
+
+  --diagram-accent-2: #66BB6A;
+  --diagram-accent-bg-2: #0d2818;
+  --diagram-accent-bg-2b: #1b4332;
+  --diagram-accent-text-2: #A5D6A7;
+
+  --diagram-accent-3: #CE93D8;
+  --diagram-accent-bg-3: #2d1b3d;
+  --diagram-accent-bg-3b: #3d2550;
+  --diagram-accent-text-3: #E1BEE7;
+
+  --diagram-accent-4: #FFB74D;
+  --diagram-accent-bg-4: #3d2d15;
+  --diagram-accent-text-4: #FFCC80;
+
+  --diagram-accent-5: #EF9A9A;
+  --diagram-accent-bg-5: #3d1520;
+  --diagram-accent-text-5: #FFCDD2;
+
+  --diagram-arrow: #b0b0b0;
+
+  --diagram-ghost: #666666;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 768px) {
+  .vp-doc h1 {
+    font-size: 1.6em;
+  }
+
+  .vp-doc h2 {
+    font-size: 1.3em;
+  }
+
+  .vp-doc table {
+    font-size: 13px;
+  }
+}
+
+/* ---------- Mermaid 图 ---------- */
+.vp-doc .mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 2em 0;
+  padding: 28px 24px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  overflow: visible;
+}
+
+.vp-doc .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  overflow: visible !important;
+}
+
+.vp-doc .mermaid .node foreignObject {
+  overflow: visible !important;
+}
