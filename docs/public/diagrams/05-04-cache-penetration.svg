@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow8" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">缓存穿透示意</text>
+
+  <!-- Participants -->
+  <rect x="80" y="50" rx="6" width="100" height="40" fill="#ffcdd2" stroke="#ef9a9a"/>
+  <text x="130" y="75" text-anchor="middle" font-weight="bold" fill="#333">攻击者</text>
+
+  <rect x="330" y="50" rx="6" width="100" height="40" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="380" y="75" text-anchor="middle" font-weight="bold" fill="#333">缓存</text>
+
+  <rect x="600" y="50" rx="6" width="100" height="40" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="650" y="75" text-anchor="middle" font-weight="bold" fill="#333">数据库</text>
+
+  <line x1="130" y1="90" x2="130" y2="300" stroke="#999" stroke-dasharray="4"/>
+  <line x1="380" y1="90" x2="380" y2="300" stroke="#999" stroke-dasharray="4"/>
+  <line x1="650" y1="90" x2="650" y2="300" stroke="#999" stroke-dasharray="4"/>
+
+  <!-- Request 1 -->
+  <line x1="134" y1="120" x2="376" y2="120" stroke="#666" marker-end="url(#arrow8)"/>
+  <text x="255" y="115" text-anchor="middle" fill="#333" font-size="12">查询 id=99999999</text>
+
+  <line x1="376" y1="145" x2="134" y2="145" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow8)"/>
+  <text x="255" y="140" text-anchor="middle" fill="#333" font-size="12">缓存未命中</text>
+
+  <line x1="384" y1="170" x2="646" y2="170" stroke="#666" marker-end="url(#arrow8)"/>
+  <text x="515" y="165" text-anchor="middle" fill="#333" font-size="12">查询 id=99999999</text>
+
+  <line x1="646" y1="195" x2="384" y2="195" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow8)"/>
+  <text x="515" y="190" text-anchor="middle" fill="#333" font-size="12">不存在</text>
+
+  <line x1="376" y1="220" x2="134" y2="220" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow8)"/>
+  <text x="255" y="215" text-anchor="middle" fill="#333" font-size="12">null</text>
+
+  <!-- Request 2 -->
+  <line x1="134" y1="250" x2="376" y2="250" stroke="#666" marker-end="url(#arrow8)"/>
+  <text x="255" y="245" text-anchor="middle" fill="#333" font-size="12">查询 id=99999998</text>
+
+  <!-- Warning note -->
+  <rect x="430" y="240" rx="6" width="340" height="60" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="450" y="260" fill="#c00" font-size="12" font-weight="bold">⚠ 每次请求都打到数据库！</text>
+  <text x="450" y="280" fill="#555" font-size="11">解决方案：缓存空值（短 TTL）或布隆过滤器</text>
+</svg>

@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 820">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; fill: #333; }
+    .start { fill: #e3f2fd; stroke: #90caf9; stroke-width: 1.5; }
+    .diamond { fill: #fff3e0; stroke: #ffcc80; stroke-width: 1.5; }
+    .solution { fill: #e8f5e9; stroke: #a5d6a7; stroke-width: 1.5; }
+    .line { stroke: #666; stroke-width: 1.5; marker-end: url(#arrow); }
+    .label-yes { font-size: 12px; fill: #388e3c; }
+    .label-no { font-size: 12px; fill: #c62828; }
+  </style>
+
+  <!-- Start -->
+  <rect x="280" y="10" width="240" height="40" rx="6" class="start"/>
+  <text x="400" y="35" text-anchor="middle" font-weight="bold">@Transactional 不生效</text>
+
+  <!-- Q1: public? -->
+  <polygon points="400,80 500,110 400,140 300,110" class="diamond"/>
+  <text x="400" y="114" text-anchor="middle" font-size="12">方法是 public 的？</text>
+  <line x1="400" y1="50" x2="400" y2="80" class="line"/>
+
+  <!-- No → -->
+  <line x1="500" y1="110" x2="650" y2="110" class="line"/>
+  <text x="530" y="103" class="label-no">否</text>
+  <rect x="650" y="92" width="140" height="36" rx="6" class="solution"/>
+  <text x="720" y="114" text-anchor="middle" font-size="12">改为 public 或用 AspectJ</text>
+
+  <!-- Yes ↓ -->
+  <text x="410" y="155" class="label-yes">是</text>
+  <line x1="400" y1="140" x2="400" y2="170" class="line"/>
+
+  <!-- Q2: 自调用? -->
+  <polygon points="400,170 500,200 400,230 300,200" class="diamond"/>
+  <text x="400" y="204" text-anchor="middle" font-size="12">是自调用？</text>
+
+  <!-- No → -->
+  <line x1="500" y1="200" x2="650" y2="200" class="line"/>
+  <text x="530" y="193" class="label-no">否</text>
+
+  <!-- Yes ↓ -->
+  <line x1="300" y1="200" x2="150" y2="200" class="line"/>
+  <text x="320" y="193" class="label-yes">是</text>
+  <rect x="10" y="182" width="140" height="36" rx="6" class="solution"/>
+  <text x="80" y="204" text-anchor="middle" font-size="12">注入自身或拆分 Bean</text>
+
+  <!-- Q3: catch? -->
+  <line x1="400" y1="230" x2="400" y2="260" class="line"/>
+  <polygon points="400,260 500,290 400,320 300,290" class="diamond"/>
+  <text x="400" y="294" text-anchor="middle" font-size="12">异常被 catch 了？</text>
+
+  <line x1="500" y1="290" x2="650" y2="290" class="line"/>
+  <text x="530" y="283" class="label-no">否</text>
+
+  <line x1="300" y1="290" x2="150" y2="290" class="line"/>
+  <text x="320" y="283" class="label-yes">是</text>
+  <rect x="10" y="272" width="140" height="36" rx="6" class="solution"/>
+  <text x="80" y="290" text-anchor="middle" font-size="11">手动 setRollbackOnly</text>
+  <text x="80" y="303" text-anchor="middle" font-size="11">或重新抛出</text>
+
+  <!-- Q4: checked? -->
+  <line x1="400" y1="320" x2="400" y2="350" class="line"/>
+  <polygon points="400,350 500,380 400,410 300,380" class="diamond"/>
+  <text x="400" y="384" text-anchor="middle" font-size="12">是 checked exception？</text>
+
+  <line x1="500" y1="380" x2="650" y2="380" class="line"/>
+  <text x="530" y="373" class="label-no">否</text>
+
+  <line x1="300" y1="380" x2="150" y2="380" class="line"/>
+  <text x="320" y="373" class="label-yes">是</text>
+  <rect x="10" y="362" width="140" height="36" rx="6" class="solution"/>
+  <text x="80" y="384" text-anchor="middle" font-size="11">加 rollbackFor</text>
+
+  <!-- Q5: DB? -->
+  <line x1="400" y1="410" x2="400" y2="440" class="line"/>
+  <polygon points="400,440 500,470 400,500 300,470" class="diamond"/>
+  <text x="400" y="474" text-anchor="middle" font-size="12">数据库支持事务？</text>
+
+  <line x1="300" y1="470" x2="150" y2="470" class="line"/>
+  <text x="320" y="463" class="label-no">否</text>
+  <rect x="10" y="452" width="140" height="36" rx="6" class="solution"/>
+  <text x="80" y="474" text-anchor="middle" font-size="12">换 InnoDB 引擎</text>
+
+  <line x1="500" y1="470" x2="650" y2="470" class="line"/>
+  <text x="530" y="463" class="label-yes">是</text>
+
+  <!-- Q6: Bean managed? -->
+  <line x1="400" y1="500" x2="400" y2="530" class="line"/>
+  <polygon points="400,530 500,560 400,590 300,560" class="diamond"/>
+  <text x="400" y="564" text-anchor="middle" font-size="12">Bean 被 Spring 管理？</text>
+
+  <line x1="300" y1="560" x2="150" y2="560" class="line"/>
+  <text x="320" y="553" class="label-no">否</text>
+  <rect x="10" y="542" width="140" height="36" rx="6" class="solution"/>
+  <text x="80" y="564" text-anchor="middle" font-size="12">加 @Service</text>
+
+  <line x1="500" y1="560" x2="650" y2="560" class="line"/>
+  <text x="530" y="553" class="label-yes">是</text>
+
+  <!-- Q7: 多线程? -->
+  <line x1="400" y1="590" x2="400" y2="620" class="line"/>
+  <polygon points="400,620 500,650 400,680 300,650" class="diamond"/>
+  <text x="400" y="654" text-anchor="middle" font-size="12">在多线程里调用？</text>
+
+  <line x1="500" y1="650" x2="650" y2="650" class="line"/>
+  <text x="530" y="643" class="label-no">否</text>
+
+  <line x1="300" y1="650" x2="150" y2="650" class="line"/>
+  <text x="320" y="643" class="label-yes">是</text>
+  <rect x="10" y="632" width="140" height="36" rx="6" class="solution"/>
+  <text x="80" y="654" text-anchor="middle" font-size="11">去掉多线程或</text>
+  <text x="80" y="667" text-anchor="middle" font-size="11">子线程自管事务</text>
+
+  <!-- Q8: final? -->
+  <line x1="400" y1="680" x2="400" y2="710" class="line"/>
+  <polygon points="400,710 500,740 400,770 300,740" class="diamond"/>
+  <text x="400" y="744" text-anchor="middle" font-size="12">final 方法/类？</text>
+
+  <line x1="300" y1="740" x2="150" y2="740" class="line"/>
+  <text x="320" y="733" class="label-yes">是</text>
+  <rect x="10" y="722" width="140" height="36" rx="6" class="solution"/>
+  <text x="80" y="744" text-anchor="middle" font-size="12">去掉 final</text>
+
+  <line x1="500" y1="740" x2="650" y2="740" class="line"/>
+  <text x="530" y="733" class="label-no">否</text>
+
+  <!-- Final: check proxy -->
+  <rect x="650" y="722" width="140" height="36" rx="6" class="start"/>
+  <text x="720" y="744" text-anchor="middle" font-size="11">断点检查代理类</text>
+</svg>

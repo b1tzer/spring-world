@@ -179,23 +179,7 @@ protected void initStrategies(ApplicationContext context) {
 
 用 Mermaid 画一下启动时序：
 
-```mermaid
-sequenceDiagram
-    participant Tomcat as Tomcat 容器
-    participant FrameworkServlet as FrameworkServlet
-    participant DispatcherServlet as DispatcherServlet
-    participant Context as Spring 容器
-
-    Tomcat->>FrameworkServlet: init()
-    FrameworkServlet->>Context: 创建 WebApplicationContext
-    FrameworkServlet->>DispatcherServlet: onRefresh(context)
-    DispatcherServlet->>DispatcherServlet: initStrategies()
-    DispatcherServlet->>Context: getBean(HandlerMapping.class)
-    DispatcherServlet->>Context: getBean(HandlerAdapter.class)
-    DispatcherServlet->>Context: getBean(ViewResolver.class)
-    DispatcherServlet->>Context: getBean(HandlerExceptionResolver.class)
-    Note over DispatcherServlet: 九大组件全部就绪
-```
+![DispatcherServlet 初始化时序](/diagrams/03-01-dispatcher-init-flow.svg)
 
 一个关键细节：**DispatcherServlet 自身不持有这些组件的引用，而是从容器里按类型查找。** 这意味着你可以自定义任何组件——只需要往容器里注册一个 Bean，DispatcherServlet 就能自动发现并使用它。
 

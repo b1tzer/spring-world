@@ -14,15 +14,7 @@ Spring Batch 就是为这种场景设计的——**大规模、可重复、有�
 
 Spring Batch 的核心概念就三个：
 
-```mermaid
-graph TD
-    A[Job 批处理作业] --> B[Step 1: 导入数据]
-    A --> C[Step 2: 数据校验]
-    A --> D[Step 3: 生成报表]
-    B --> E[Chunk 1: 读1000条→处理→写入]
-    B --> F[Chunk 2: 读1000条→处理→写入]
-    B --> G[Chunk N: ...]
-```
+![Spring Batch Job/Step/Chunk 三层模型](/diagrams/07-02-job-step-chunk.svg)
 
 - **Job**：一个完整的批处理作业。比如"每日对账"就是一个 Job。
 - **Step**：Job 由多个 Step 组成。Step 之间默认顺序执行，上一个成功才执行下一个。

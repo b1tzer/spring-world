@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="cl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#666"/></marker>
+  </defs>
+
+  <text x="400" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Profile 配置文件加载顺序</text>
+  <text x="400" y="48" text-anchor="middle" font-size="13" fill="#666">同一配置项，位置越靠前优先级越高</text>
+
+  <!-- Number labels on the left -->
+  <text x="175" y="89" text-anchor="middle" font-size="12" font-weight="bold" fill="#e53935">1</text>
+  <text x="175" y="139" text-anchor="middle" font-size="12" font-weight="bold" fill="#e65100">2</text>
+  <text x="175" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#f57f17">3</text>
+  <text x="175" y="239" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565c0">4</text>
+  <text x="175" y="289" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565c0">5</text>
+  <text x="175" y="339" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">6</text>
+  <text x="175" y="389" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">7</text>
+
+  <!-- Priority items -->
+  <rect x="200" y="68" width="400" height="38" rx="6" fill="#e53935" opacity="0.12" stroke="#e53935" stroke-width="1.5"/>
+  <text x="400" y="92" text-anchor="middle" font-weight="bold" fill="#c62828">命令行参数</text>
+
+  <line x1="400" y1="106" x2="400" y2="118" stroke="#666" stroke-width="1.5" marker-end="url(#cl)"/>
+
+  <rect x="200" y="118" width="400" height="38" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="400" y="142" text-anchor="middle" fill="#333">SPRING_APPLICATION_JSON</text>
+
+  <line x1="400" y1="156" x2="400" y2="168" stroke="#666" stroke-width="1.5" marker-end="url(#cl)"/>
+
+  <rect x="200" y="168" width="400" height="38" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="400" y="192" text-anchor="middle" fill="#333">Java 系统属性</text>
+
+  <line x1="400" y1="206" x2="400" y2="218" stroke="#666" stroke-width="1.5" marker-end="url(#cl)"/>
+
+  <rect x="200" y="218" width="400" height="38" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="400" y="242" text-anchor="middle" fill="#333">OS 环境变量</text>
+
+  <line x1="400" y1="256" x2="400" y2="268" stroke="#666" stroke-width="1.5" marker-end="url(#cl)"/>
+
+  <rect x="200" y="268" width="400" height="38" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="400" y="292" text-anchor="middle" fill="#333">application-{profile}.yml</text>
+
+  <line x1="400" y1="306" x2="400" y2="318" stroke="#666" stroke-width="1.5" marker-end="url(#cl)"/>
+
+  <rect x="200" y="318" width="400" height="38" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="400" y="342" text-anchor="middle" fill="#333">application.yml</text>
+
+  <line x1="400" y1="356" x2="400" y2="368" stroke="#666" stroke-width="1.5" marker-end="url(#cl)"/>
+
+  <rect x="200" y="368" width="400" height="38" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="400" y="392" text-anchor="middle" fill="#333">@PropertySource</text>
+
+  <!-- Arrow down to default -->
+  <line x1="400" y1="406" x2="400" y2="412" stroke="#666" stroke-width="1.5" marker-end="url(#cl)"/>
+</svg>

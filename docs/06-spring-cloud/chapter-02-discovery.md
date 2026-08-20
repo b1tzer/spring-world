@@ -18,16 +18,7 @@ String userServiceUrl = "http://192.168.1.10:8081";
 
 服务注册与发现就是解决这个问题的。它的核心思想很简单：**每个服务启动时告诉注册中心"我在哪"，调用方去注册中心问"它在哪"。**
 
-```mermaid
-graph LR
-    A[订单服务] -->|1. 查询用户服务地址| R[注册中心]
-    R -->|2. 返回实例列表| A
-    A -->|3. 调用| B[用户服务 :8081]
-    A -->|3. 调用| C[用户服务 :8082]
-    
-    B -.->|注册自己| R
-    C -.->|注册自己| R
-```
+![服务注册与发现](/diagrams/06-02-service-discovery.svg)
 
 这就是服务注册与发现的全部核心思想。接下来我们看看具体怎么实现。
 
@@ -110,14 +101,7 @@ Eureka 是 Netflix 开源的注册中心，Spring Cloud 最早默认集成的就
 
 Eureka 采用的是 **AP 模型**（Availability + Partition tolerance），也就是优先保证可用性，允许在极端情况下返回过期数据。这和它的使用场景有关——注册中心挂了，服务之间还能用缓存的地址互相调用，比整个系统不可用要好。
 
-```mermaid
-graph TD
-    E1[Eureka Server 1] <-->|互相复制| E2[Eureka Server 2]
-    S1[服务A 实例1] -->|注册 + 心跳| E1
-    S2[服务A 实例2] -->|注册 + 心跳| E2
-    C[服务B] -->|拉取注册表| E1
-    C -.->|E1挂了？用缓存| C
-```
+![Eureka 互相复制](/diagrams/06-02-eureka-replication.svg)
 
 ### Eureka vs Nacos
 
@@ -162,20 +146,7 @@ Consul 的优势在于多语言支持和内置的健康检查（支持 HTTP、TC
 
 **客户端心跳（Client Beat）：** 服务实例定期向注册中心发送"我还活着"的信号。如果超过一定时间没收到心跳（比如 15 秒），就认为实例不健康。Nacos 和 Eureka 都用这种方式。
 
-```mermaid
-sequenceDiagram
-    participant S as 服务实例
-    participant N as 注册中心
-    
-    loop 每 5 秒
-        S->>N: 心跳（我还在）
-    end
-    
-    Note over S: 实例崩溃！
-    N->>N: 15秒没收到心跳
-    N->>N: 标记为不健康
-    N->>N: 30秒后剔除
-```
+![心跳检测机制](/diagrams/06-02-heartbeat-check.svg)
 
 **服务端探测（Server Probe）：** 注册中心主动去检查服务实例是否健康。Consul 支持这种方式——它会定期调用你配置的健康检查接口（比如 `/actuator/health`）。
 

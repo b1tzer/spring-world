@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow6" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">异常解析完整流程</text>
+
+  <!-- A: Controller 抛出异常 -->
+  <rect x="300" y="50" width="200" height="36" rx="6" fill="#ffebee" stroke="#ef9a9a"/>
+  <text x="400" y="73" text-anchor="middle" fill="#333">Controller 方法抛出异常</text>
+
+  <line x1="400" y1="86" x2="400" y2="110" stroke="#666" marker-end="url(#arrow6)"/>
+
+  <!-- B: ExceptionHandlerExceptionResolver -->
+  <rect x="260" y="114" width="280" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="137" text-anchor="middle" fill="#333">ExceptionHandlerExceptionResolver</text>
+
+  <line x1="400" y1="150" x2="400" y2="174" stroke="#666" marker-end="url(#arrow6)"/>
+
+  <!-- C: Controller 有 @ExceptionHandler? -->
+  <polygon points="400,178 540,213 400,248 260,213" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="210" text-anchor="middle" fill="#333" font-size="12">当前 Controller 有</text>
+  <text x="400" y="225" text-anchor="middle" fill="#333" font-size="12">@ExceptionHandler?</text>
+
+  <!-- C -> D (是, 右) -->
+  <line x1="540" y1="213" x2="620" y2="213" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="580" y="206" text-anchor="middle" fill="#333">是</text>
+  <rect x="624" y="195" width="150" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="699" y="218" text-anchor="middle" fill="#333">执行匹配的 Handler</text>
+
+  <!-- C -> E (否, 下) -->
+  <line x1="400" y1="248" x2="400" y2="272" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="415" y="264" fill="#333">否</text>
+
+  <!-- E: @ControllerAdvice 有匹配? -->
+  <polygon points="400,276 540,311 400,346 260,311" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="305" text-anchor="middle" fill="#333" font-size="12">@ControllerAdvice 有</text>
+  <text x="400" y="320" text-anchor="middle" fill="#333" font-size="12">匹配的 Handler?</text>
+
+  <!-- E -> D2 (是, 右) -->
+  <line x1="540" y1="311" x2="620" y2="311" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="580" y="304" text-anchor="middle" fill="#333">是</text>
+  <rect x="624" y="293" width="150" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="699" y="316" text-anchor="middle" fill="#333">执行匹配的 Handler</text>
+
+  <!-- E -> F (否, 下) -->
+  <line x1="400" y1="346" x2="400" y2="370" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="415" y="362" fill="#333">否</text>
+
+  <!-- F: ResponseStatusExceptionResolver -->
+  <rect x="260" y="374" width="280" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="397" text-anchor="middle" fill="#333">ResponseStatusExceptionResolver</text>
+
+  <line x1="400" y1="410" x2="400" y2="434" stroke="#666" marker-end="url(#arrow6)"/>
+
+  <!-- G: 异常有 @ResponseStatus? -->
+  <polygon points="400,438 520,468 400,498 280,468" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="473" text-anchor="middle" fill="#333" font-size="12">异常有 @ResponseStatus?</text>
+
+  <!-- G -> H (是, 右) -->
+  <line x1="520" y1="468" x2="620" y2="468" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="570" y="461" text-anchor="middle" fill="#333">是</text>
+  <rect x="624" y="450" width="150" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="699" y="473" text-anchor="middle" fill="#333">返回对应状态码</text>
+
+  <!-- G -> I (否, 下) -->
+  <line x1="400" y1="498" x2="400" y2="522" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="415" y="514" fill="#333">否</text>
+
+  <!-- I: DefaultHandlerExceptionResolver -->
+  <rect x="240" y="526" width="320" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="549" text-anchor="middle" fill="#333">DefaultHandlerExceptionResolver</text>
+
+  <line x1="400" y1="562" x2="400" y2="578" stroke="#666" marker-end="url(#arrow6)"/>
+
+  <!-- J: 是框架级异常? -->
+  <polygon points="400,582 500,607 400,632 300,607" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="612" text-anchor="middle" fill="#333" font-size="12">是框架级异常?</text>
+
+  <!-- J -> K (是, 左) -->
+  <line x1="300" y1="607" x2="160" y2="607" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="230" y="600" text-anchor="middle" fill="#333">是</text>
+  <rect x="20" y="589" width="140" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="90" y="612" text-anchor="middle" fill="#333">返回默认错误响应</text>
+
+  <!-- J -> L (否, 右) -->
+  <line x1="500" y1="607" x2="620" y2="607" stroke="#666" marker-end="url(#arrow6)"/>
+  <text x="560" y="600" text-anchor="middle" fill="#333">否</text>
+  <rect x="624" y="589" width="100" height="36" rx="6" fill="#ffebee" stroke="#ef9a9a"/>
+  <text x="674" y="612" text-anchor="middle" fill="#333">返回 500</text>
+</svg>

@@ -222,17 +222,7 @@ public Product getProductById(Long id) {
 
 `condition` 在方法执行前判断，`unless` 在方法执行后判断。两者配合可以精确控制缓存行为。
 
-```mermaid
-flowchart TD
-    A[调用 getProductById] --> B{缓存中有数据?}
-    B -->|命中| C[直接返回缓存数据]
-    B -->|未命中| D[执行方法体<br/>查询数据库]
-    D --> E[将结果放入缓存]
-    E --> F[返回结果]
-
-    style C fill:#90EE90
-    style D fill:#FFB6C1
-```
+![Cacheable 缓存流程](/diagrams/05-04-cacheable-flow.svg)
 
 **需要注意的是**：`@Cacheable` 的过期时间需要在 `CacheManager` 中设置，注解本身不支持 `expire` 参数。需要自定义配置：
 
@@ -274,24 +264,7 @@ public class CacheConfig {
 
 **问题**：有人恶意请求 `GET /product/99999999`。这个商品根本不存在，缓存里没有，数据库里也没有。每次请求都打到数据库。如果这种请求量很大，数据库就崩了。
 
-```mermaid
-sequenceDiagram
-    participant Attacker as 攻击者
-    participant Cache as 缓存
-    participant DB as 数据库
-
-    Attacker->>Cache: 查询 id=99999999
-    Cache-->>Attacker: 缓存未命中
-    Cache->>DB: 查询 id=99999999
-    DB-->>Cache: 不存在
-    Cache-->>Attacker: null
-
-    Attacker->>Cache: 查询 id=99999998
-    Cache-->>Attacker: 缓存未命中
-    Cache->>DB: 查询 id=99999998
-    DB-->>Cache: 不存在
-    Note over Cache,DB: 每次请求都打到数据库！
-```
+![缓存穿透示意](/diagrams/05-04-cache-penetration.svg)
 
 **解决方案：缓存空值。** 查不到的数据也放进缓存，设一个较短的过期时间：
 
@@ -372,19 +345,7 @@ stringRedisTemplate.opsForValue().set(key, value,
 
 **另一个关键策略：多级缓存。** 在 Redis 之前加一层本地缓存（Caffeine）：
 
-```mermaid
-graph LR
-    A[请求] --> B{本地缓存<br/>Caffeine}
-    B -->|命中| C[返回]
-    B -->|未命中| D{Redis 缓存}
-    D -->|命中| E[返回并写入本地缓存]
-    D -->|未命中| F[查数据库]
-    F --> G[写入 Redis 和本地缓存]
-    G --> C
-
-    style B fill:#90EE90
-    style D fill:#87CEEB
-```
+![多级缓存架构](/diagrams/05-04-multi-level-cache.svg)
 
 ```java
 @Service

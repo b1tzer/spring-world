@@ -55,41 +55,7 @@ public class UserService {
 
 先搞清楚继承关系，这决定了你能用哪些方法：
 
-```mermaid
-classDiagram
-    class Repository~T, ID~ {
-        <<interface>>
-        标记接口，无方法
-    }
-
-    class CrudRepository~T, ID~ {
-        <<interface>>
-        +save(T) T
-        +findById(ID) Optional~T~
-        +findAll() List~T~
-        +deleteById(ID) void
-        +count() long
-        +existsById(ID) boolean
-    }
-
-    class PagingAndSortingRepository~T, ID~ {
-        <<interface>>
-        +findAll(Sort) List~T~
-        +findAll(Pageable) Page~T~
-    }
-
-    class JpaRepository~T, ID~ {
-        <<interface>>
-        +saveAll(Iterable) List~T~
-        +flush() void
-        +saveAndFlush(T) T
-        +deleteInBatch(Iterable) void
-    }
-
-    Repository <|-- CrudRepository
-    CrudRepository <|-- PagingAndSortingRepository
-    PagingAndSortingRepository <|-- JpaRepository
-```
+![Repository 接口继承体系](/diagrams/05-02-repository-hierarchy.svg)
 
 实际开发中，**直接用 `JpaRepository` 就行**，它包含了所有常用功能。不用纠结该继承哪个——JpaRepository 是最全的。
 
@@ -269,21 +235,7 @@ public class UserService {
 
 每个 Specification 方法内部先判断条件是否为空，为空就返回 `null`。`Specification.where()` 和 `.and()` 会自动忽略 `null` 值，所以不需要的条件不会被拼进 SQL。
 
-```mermaid
-flowchart LR
-    A[请求参数] --> B{条件判断}
-    B -->|name 不为空| C[name LIKE '%张%']
-    B -->|minAge 不为空| D[age >= 18]
-    B -->|status 不为空| E[status = 'ACTIVE']
-    C --> F[AND 拼接]
-    D --> F
-    E --> F
-    F --> G[最终 SQL]
-
-    style C fill:#90EE90
-    style D fill:#90EE90
-    style E fill:#FFB6C1
-```
+![Specification 动态查询流程](/diagrams/05-02-specification-flow.svg)
 
 上图中如果用户只传了 name 和 minAge，最终 SQL 就是 `WHERE name LIKE '%张%' AND age >= 18`，status 条件被跳过了。
 

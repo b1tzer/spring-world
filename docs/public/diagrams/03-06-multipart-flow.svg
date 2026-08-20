@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow9" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">MultipartResolver 文件上传流程</text>
+
+  <!-- A: HTTP Request multipart -->
+  <rect x="10" y="100" width="140" height="50" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="80" y="121" text-anchor="middle" fill="#333" font-size="13">HTTP Request</text>
+  <text x="80" y="138" text-anchor="middle" fill="#666" font-size="11">multipart/form-data</text>
+
+  <!-- Arrow A->B -->
+  <line x1="150" y1="125" x2="185" y2="125" stroke="#666" marker-end="url(#arrow9)"/>
+
+  <!-- B: DispatcherServlet -->
+  <rect x="190" y="107" width="130" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="255" y="130" text-anchor="middle" fill="#333">DispatcherServlet</text>
+
+  <!-- Arrow B->C -->
+  <line x1="320" y1="125" x2="355" y2="125" stroke="#666" marker-end="url(#arrow9)"/>
+
+  <!-- C: 有 MultipartResolver? -->
+  <polygon points="420,95 490,125 420,155 350,125" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="420" y="121" text-anchor="middle" fill="#333" font-size="11">有</text>
+  <text x="420" y="135" text-anchor="middle" fill="#333" font-size="11">MultipartResolver?</text>
+
+  <!-- C -> D (是, 右上) -->
+  <line x1="490" y1="115" x2="530" y2="80" stroke="#666" marker-end="url(#arrow9)"/>
+  <text x="515" y="100" fill="#333" font-size="12">是</text>
+
+  <!-- D: resolveMultipart -->
+  <rect x="535" y="55" width="180" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="625" y="78" text-anchor="middle" fill="#333">MultipartResolver.resolveMultipart</text>
+
+  <!-- Arrow D->E -->
+  <line x1="625" y1="91" x2="625" y2="115" stroke="#666" marker-end="url(#arrow9)"/>
+
+  <!-- E: MultipartFile -->
+  <rect x="545" y="120" width="160" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="625" y="143" text-anchor="middle" fill="#333">包装为 MultipartFile</text>
+
+  <!-- Arrow E->F -->
+  <line x1="625" y1="156" x2="625" y2="180" stroke="#666" marker-end="url(#arrow9)"/>
+
+  <!-- F: Controller -->
+  <rect x="535" y="185" width="180" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="625" y="208" text-anchor="middle" fill="#333">Controller 收到 MultipartFile</text>
+
+  <!-- C -> G (否, 右下) -->
+  <line x1="490" y1="135" x2="530" y2="250" stroke="#666" marker-end="url(#arrow9)"/>
+  <text x="510" y="200" fill="#333" font-size="12">否</text>
+
+  <!-- G: 普通 HttpServletRequest -->
+  <rect x="535" y="235" width="180" height="36" rx="6" fill="#ffebee" stroke="#ef9a9a"/>
+  <text x="625" y="258" text-anchor="middle" fill="#333">普通 HttpServletRequest</text>
+</svg>

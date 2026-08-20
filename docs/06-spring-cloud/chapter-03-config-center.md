@@ -10,14 +10,7 @@
 
 配置中心解决的核心问题是：**把配置从代码里抽出来，集中管理，支持动态更新。**
 
-```mermaid
-graph TD
-    A[Nacos 配置中心] -->|推送变更| B[服务实例 1]
-    A -->|推送变更| C[服务实例 2]
-    A -->|推送变更| D[服务实例 3]
-    
-    E[运维人员] -->|修改配置| A
-```
+![Nacos 配置推送](/diagrams/06-03-nacos-config-push.svg)
 
 ---
 
@@ -113,20 +106,7 @@ spring:
 
 为什么加了 `@RefreshScope` 就能动态刷新？我们拆解一下这个过程。
 
-```mermaid
-sequenceDiagram
-    participant N as Nacos Server
-    participant C as ConfigClient
-    participant S as Spring Context
-    
-    C->>N: 长轮询（30秒超时）
-    Note over N: 配置被修改了！
-    N->>C: 返回变更的 Data ID 列表
-    C->>N: 拉取最新配置内容
-    C->>S: 发布 RefreshEvent
-    S->>S: 销毁 @RefreshScope 的 Bean
-    S->>S: 重建 Bean，注入新值
-```
+![Nacos 长轮询机制](/diagrams/06-03-nacos-long-polling.svg)
 
 关键机制是**长轮询（Long Polling）**。客户端不是傻乎乎地每秒问一次"配置变了吗"，而是发一个请求到 Nacos，这个请求会"挂"在服务端 30 秒。如果 30 秒内配置变了，Nacos 立刻返回；如果没变，30 秒后超时返回，客户端再发起下一次长轮询。
 
@@ -229,12 +209,7 @@ Spring Cloud Config 是 Spring Cloud 原生的配置中心，它把配置存在 
 
 ### 工作方式
 
-```mermaid
-graph LR
-    A[Git 仓库] -->|拉取配置| B[Config Server]
-    B -->|提供配置| C[服务实例]
-    C -.->|Webhook 通知变更| B
-```
+![Spring Cloud Config 工作方式](/diagrams/06-03-spring-cloud-config.svg)
 
 配置存在 Git 里有天然的优势：**版本管理**。每次配置变更都有 commit 记录，随时可以回滚。
 

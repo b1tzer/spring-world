@@ -33,32 +33,7 @@ public class UserRepository {
 
 来对比一下原生 JDBC 到底"疼"在哪：
 
-```mermaid
-sequenceDiagram
-    participant App as 应用代码
-    participant JDBC as 原生 JDBC
-    participant DB as 数据库
-
-    App->>JDBC: getConnection()
-    JDBC->>DB: TCP 三次握手 + 认证
-    DB-->>JDBC: 连接就绪
-    JDBC-->>App: Connection
-
-    App->>JDBC: prepareStatement("SELECT...")
-    JDBC-->>App: PreparedStatement
-
-    App->>JDBC: setLong(1, id)
-    App->>JDBC: executeQuery()
-    JDBC->>DB: 执行 SQL
-    DB-->>JDBC: ResultSet
-    JDBC-->>App: ResultSet
-
-    App->>App: 手动映射 rs.getString("name") → user.name
-    App->>JDBC: rs.close()
-    App->>JDBC: ps.close()
-    App->>JDBC: conn.close()
-    JDBC->>DB: 关闭连接
-```
+![原生 JDBC 调用流程](/diagrams/05-01-jdbc-sequence.svg)
 
 JdbcTemplate 帮你把上面虚线框里的"仪式"全包了，你只需要关注 SQL 和结果映射。
 
@@ -124,23 +99,7 @@ Connection conn = DriverManager.getConnection(
 
 **连接池的核心思想**：预先创建一批连接放在池子里，用的时候借出来，用完还回去，而不是每次新建再销毁。
 
-```mermaid
-sequenceDiagram
-    participant App as 应用程序
-    participant Pool as 连接池
-    participant DB as 数据库
-
-    Note over Pool: 启动时预创建 N 个连接
-    Pool->>DB: 建立连接 1
-    Pool->>DB: 建立连接 2
-    Pool->>DB: 建立连接 N
-
-    App->>Pool: 借连接
-    Pool-->>App: 返回连接 1（借出）
-    App->>DB: 执行 SQL（复用已有连接）
-    App->>Pool: 还连接
-    Note over Pool: 连接 1 回到池中，等待下一个请求
-```
+![连接池工作原理](/diagrams/05-01-connection-pool.svg)
 
 Spring Boot 默认使用 HikariCP 作为连接池（从 2.0 开始）。配置方式：
 
@@ -284,31 +243,7 @@ public class Application {
 }
 ```
 
-```mermaid
-graph TB
-    subgraph "应用"
-        Service[OrderService]
-        BJdbc[businessJdbcTemplate]
-        WJdbc[warehouseJdbcTemplate]
-    end
-
-    subgraph "数据源配置"
-        BDS[businessDataSource]
-        WDS[warehouseDataSource]
-    end
-
-    subgraph "数据库"
-        BDB[(business_db)]
-        WDB[(warehouse_db)]
-    end
-
-    Service --> BJdbc
-    Service --> WJdbc
-    BJdbc --> BDS
-    WJdbc --> WDS
-    BDS --> BDB
-    WDS --> WDB
-```
+![多数据源架构](/diagrams/05-01-multi-datasource.svg)
 
 多数据源场景下事务管理就复杂了。`@Transactional` 默认用的是主数据源的事务管理器。跨数据源的分布式事务，要么用 JTA（太重了），要么在业务层手动控制。大多数场景下，能做到单数据源内的事务就够了，跨数据源的操作尽量设计成最终一致的。
 

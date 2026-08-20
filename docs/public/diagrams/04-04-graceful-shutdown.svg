@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <marker id="arrow-dash" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#999"/>
+    </marker>
+  </defs>
+  <!-- Participants -->
+  <rect x="80" y="15" width="140" height="40" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="150" y="40" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">Kubernetes</text>
+  <rect x="330" y="15" width="160" height="40" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="410" y="40" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">Spring Boot App</text>
+  <rect x="600" y="15" width="120" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="660" y="40" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">客户端</text>
+  <!-- Lifelines -->
+  <line x1="150" y1="55" x2="150" y2="500" stroke="#999" stroke-width="1" stroke-dasharray="6,4"/>
+  <line x1="410" y1="55" x2="410" y2="500" stroke="#999" stroke-width="1" stroke-dasharray="6,4"/>
+  <line x1="660" y1="55" x2="660" y2="500" stroke="#999" stroke-width="1" stroke-dasharray="6,4"/>
+  <!-- K8s -> App: SIGTERM -->
+  <line x1="150" y1="90" x2="400" y2="90" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="275" y="83" text-anchor="middle" fill="#333" font-size="13">SIGTERM</text>
+  <!-- App -> App: 停止接受新请求 -->
+  <rect x="340" y="110" width="140" height="35" rx="4" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="410" y="132" text-anchor="middle" fill="#333" font-size="12">停止接受新请求</text>
+  <!-- Client -> App: 新请求 -->
+  <line x1="660" y1="165" x2="420" y2="165" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="540" y="158" text-anchor="middle" fill="#333" font-size="13">新请求（被拒绝）</text>
+  <!-- App -> Client: 503 -->
+  <line x1="410" y1="195" x2="650" y2="195" stroke="#999" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-dash)"/>
+  <text x="530" y="215" text-anchor="middle" fill="#c62828" font-size="13">503 Service Unavailable</text>
+  <!-- Note -->
+  <rect x="330" y="230" width="160" height="35" rx="4" fill="#fce4ec" stroke="#ef9a9a" stroke-width="1"/>
+  <text x="410" y="252" text-anchor="middle" fill="#c62828" font-size="12">已有请求继续处理</text>
+  <!-- App -> App: 等待最多 30s -->
+  <rect x="340" y="280" width="140" height="35" rx="4" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="410" y="302" text-anchor="middle" fill="#333" font-size="12">等待最多 30s</text>
+  <!-- App -> App: 销毁容器 -->
+  <rect x="340" y="330" width="140" height="35" rx="4" fill="#ffcdd2" stroke="#ef9a9a" stroke-width="1"/>
+  <text x="410" y="352" text-anchor="middle" fill="#333" font-size="12">销毁容器</text>
+  <!-- App -> K8s: 进程退出 -->
+  <line x1="400" y1="385" x2="160" y2="385" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="280" y="405" text-anchor="middle" fill="#333" font-size="13">进程退出</text>
+</svg>

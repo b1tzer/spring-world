@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow4" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Repository 接口继承体系</text>
+
+  <!-- Repository -->
+  <rect x="300" y="50" rx="6" width="200" height="70" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="72" text-anchor="middle" font-weight="bold" fill="#333">Repository&lt;T, ID&gt;</text>
+  <text x="400" y="92" text-anchor="middle" fill="#666" font-size="12">&lt;&lt;interface&gt;&gt;</text>
+  <text x="400" y="110" text-anchor="middle" fill="#666" font-size="12">标记接口，无方法</text>
+
+  <!-- Arrow -->
+  <line x1="400" y1="120" x2="400" y2="150" stroke="#666" marker-end="url(#arrow4)"/>
+
+  <!-- CrudRepository -->
+  <rect x="250" y="155" rx="6" width="300" height="100" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="177" text-anchor="middle" font-weight="bold" fill="#333">CrudRepository&lt;T, ID&gt;</text>
+  <text x="400" y="197" text-anchor="middle" fill="#666" font-size="12">&lt;&lt;interface&gt;&gt;</text>
+  <text x="270" y="217" fill="#555" font-size="12">+ save(T) T</text>
+  <text x="270" y="233" fill="#555" font-size="12">+ findById(ID) Optional&lt;T&gt;</text>
+  <text x="500" y="217" fill="#555" font-size="12">+ findAll() List&lt;T&gt;</text>
+  <text x="500" y="233" fill="#555" font-size="12">+ deleteById(ID) void</text>
+  <text x="270" y="249" fill="#555" font-size="12">+ count() long</text>
+  <text x="500" y="249" fill="#555" font-size="12">+ existsById(ID) boolean</text>
+
+  <!-- Arrow -->
+  <line x1="400" y1="255" x2="400" y2="285" stroke="#666" marker-end="url(#arrow4)"/>
+
+  <!-- PagingAndSortingRepository -->
+  <rect x="220" y="290" rx="6" width="360" height="70" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="312" text-anchor="middle" font-weight="bold" fill="#333">PagingAndSortingRepository&lt;T, ID&gt;</text>
+  <text x="400" y="332" text-anchor="middle" fill="#666" font-size="12">&lt;&lt;interface&gt;&gt;</text>
+  <text x="270" y="352" fill="#555" font-size="12">+ findAll(Sort) List&lt;T&gt;</text>
+  <text x="500" y="352" fill="#555" font-size="12">+ findAll(Pageable) Page&lt;T&gt;</text>
+
+  <!-- Arrow -->
+  <line x1="400" y1="360" x2="400" y2="390" stroke="#666" marker-end="url(#arrow4)"/>
+
+  <!-- JpaRepository -->
+  <rect x="220" y="395" rx="6" width="360" height="70" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="417" text-anchor="middle" font-weight="bold" fill="#333">JpaRepository&lt;T, ID&gt;</text>
+  <text x="400" y="437" text-anchor="middle" fill="#666" font-size="12">&lt;&lt;interface&gt;&gt;</text>
+  <text x="270" y="457" fill="#555" font-size="12">+ saveAll(Iterable) List&lt;T&gt;</text>
+  <text x="500" y="457" fill="#555" font-size="12">+ flush() / saveAndFlush()</text>
+
+  <!-- Note -->
+  <rect x="600" y="395" rx="6" width="170" height="40" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="685" y="415" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">↑ 直接用这个</text>
+  <text x="685" y="430" text-anchor="middle" fill="#666" font-size="11">功能最全</text>
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; fill: #333; }
+    .header { font-size: 14px; font-weight: bold; fill: #fff; }
+    .header-blue { fill: #1976d2; }
+    .header-green { fill: #388e3c; }
+    .header-orange { fill: #e65100; }
+    .header-purple { fill: #7b1fa2; }
+    .msg { font-size: 12px; fill: #555; }
+    .self-msg { font-size: 11px; fill: #888; }
+    .life { stroke: #999; stroke-width: 1.5; }
+    .call { stroke: #1976d2; stroke-width: 1.5; marker-end: url(#arrow-blue); }
+    .ret { stroke: #666; stroke-width: 1; stroke-dasharray: 5 3; marker-end: url(#arrow); }
+  </style>
+
+  <!-- Participant headers -->
+  <rect x="60" y="20" width="120" height="35" rx="6" class="header-blue"/>
+  <text x="120" y="43" text-anchor="middle" class="header">调用方</text>
+
+  <rect x="260" y="20" width="120" height="35" rx="6" class="header-green"/>
+  <text x="320" y="43" text-anchor="middle" class="header">代理对象</text>
+
+  <rect x="460" y="20" width="160" height="35" rx="6" class="header-orange"/>
+  <text x="540" y="43" text-anchor="middle" class="header">InvocationHandler</text>
+
+  <rect x="700" y="20" width="80" height="35" rx="6" class="header-purple"/>
+  <text x="740" y="43" text-anchor="middle" class="header">目标对象</text>
+
+  <!-- Lifelines -->
+  <line x1="120" y1="55" x2="120" y2="400" class="life"/>
+  <line x1="320" y1="55" x2="320" y2="400" class="life"/>
+  <line x1="540" y1="55" x2="540" y2="400" class="life"/>
+  <line x1="740" y1="55" x2="740" y2="400" class="life"/>
+
+  <!-- Call 1: 调用方 → 代理对象 -->
+  <line x1="120" y1="90" x2="310" y2="90" class="call"/>
+  <text x="215" y="83" text-anchor="middle" class="msg">proxy.createOrder(userId, items)</text>
+
+  <!-- Call 2: 代理对象 → Handler -->
+  <line x1="320" y1="130" x2="530" y2="130" class="call"/>
+  <text x="425" y="123" text-anchor="middle" class="msg">invoke(proxy, method, args)</text>
+
+  <!-- Self: 前置逻辑 -->
+  <rect x="510" y="155" width="60" height="30" rx="4" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="540" y="174" text-anchor="middle" class="self-msg">前置逻辑</text>
+  <text x="580" y="174" class="self-msg">（日志、权限...）</text>
+
+  <!-- Call 3: Handler → 目标对象 -->
+  <line x1="540" y1="210" x2="730" y2="210" class="call"/>
+  <text x="635" y="203" text-anchor="middle" class="msg">method.invoke(target, args)</text>
+
+  <!-- Return 1: 目标对象 → Handler -->
+  <line x1="730" y1="250" x2="550" y2="250" class="ret"/>
+  <text x="640" y="243" text-anchor="middle" class="msg">返回结果</text>
+
+  <!-- Self: 后置逻辑 -->
+  <rect x="510" y="270" width="60" height="30" rx="4" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="540" y="289" text-anchor="middle" class="self-msg">后置逻辑</text>
+  <text x="580" y="289" class="self-msg">（耗时统计...）</text>
+
+  <!-- Return 2: Handler → 代理对象 -->
+  <line x1="530" y1="320" x2="330" y2="320" class="ret"/>
+  <text x="430" y="313" text-anchor="middle" class="msg">返回结果</text>
+
+  <!-- Return 3: 代理对象 → 调用方 -->
+  <line x1="310" y1="360" x2="130" y2="360" class="ret"/>
+  <text x="220" y="353" text-anchor="middle" class="msg">返回结果</text>
+</svg>

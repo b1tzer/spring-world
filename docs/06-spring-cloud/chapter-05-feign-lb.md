@@ -108,15 +108,7 @@ public class OrderServiceApplication {
 
 ### 工作原理
 
-```mermaid
-graph LR
-    A[OrderController] -->|调用接口方法| B[UserClient 代理]
-    B -->|构造 HTTP 请求| C[Spring Cloud LoadBalancer]
-    C -->|选择实例| D[user-service 实例1]
-    C -->|选择实例| E[user-service 实例2]
-    B -->|发送请求| D
-    B -->|解析响应 JSON| A
-```
+![Feign 调用流程](/diagrams/06-05-feign-flow.svg)
 
 Feign 在启动时扫描所有 `@FeignClient` 注解的接口，为每个接口生成一个代理对象（基于 JDK 动态代理）。当你调用接口方法时，代理对象会：
 
@@ -333,16 +325,7 @@ public class FeignRetryConfig {
 - **重试次数不要太多。** 3 次是上限，再多就是在给下游服务"雪上加霜"。
 - **配合退避策略。** 不要立刻重试，等一会儿再试（指数退避）。
 
-```mermaid
-graph TD
-    A[Feign 调用] -->|失败| B{是幂等操作吗？}
-    B -->|是| C[等待后重试]
-    C -->|成功| D[返回结果]
-    C -->|仍然失败| E{达到重试上限？}
-    E -->|否| C
-    E -->|是| F[抛异常，交给熔断器]
-    B -->|否| F
-```
+![Feign 重试决策](/diagrams/06-05-feign-retry.svg)
 
 ---
 

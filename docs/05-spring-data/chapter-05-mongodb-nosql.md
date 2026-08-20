@@ -199,19 +199,7 @@ new Criteria().orOperator(
 )
 ```
 
-```mermaid
-graph TB
-    subgraph "选择建议"
-        S{查询复杂度?}
-        S -->|简单 CRUD| A[MongoRepository]
-        S -->|复杂条件| B[MongoTemplate]
-        S -->|聚合分析| C[MongoTemplate + Aggregation]
-    end
-
-    A --> D[方法名查询<br/>类似 JPA]
-    B --> E[Query + Criteria<br/>灵活拼接]
-    C --> F[Pipeline 聚合<br/>类似 SQL GROUP BY]
-```
+![MongoDB 操作方式选择](/diagrams/05-05-mongo-operations.svg)
 
 **我的建议**：和 JPA + MyBatis 的混用类似，简单 CRUD 用 MongoRepository，复杂查询用 MongoTemplate。两者可以在同一个 Service 中混用，不冲突。
 
@@ -348,21 +336,6 @@ spring:
       auto-index-creation: true
 ```
 
-```mermaid
-graph TB
-    subgraph "文档设计决策树"
-        A[数据是否经常一起查询?] -->|是| B[数据量大吗?]
-        A -->|否| C[引用存储]
-        B -->|不大| D[嵌套存储]
-        B -->|很大| E[混合: 核心字段嵌套<br/>其余引用]
-    end
-
-    subgraph "索引设计"
-        F[看查询条件] --> G{字段数量?}
-        G -->|单字段| H[@Indexed]
-        G -->|多字段| I[@CompoundIndex]
-        G -->|文本搜索| J[@TextIndexed]
-    end
-```
+![文档设计决策树与索引选择](/diagrams/05-05-doc-design-index.svg)
 
 **总结**：MongoDB 不是银弹。它适合数据结构灵活、读多写少、不需要强事务的场景。如果你的数据关系复杂、需要复杂的 JOIN 和事务，关系型数据库仍然是更好的选择。选型时不要被"NoSQL 很酷"冲昏头脑——数据存储的选择应该基于数据特征和查询模式，而不是技术潮流。

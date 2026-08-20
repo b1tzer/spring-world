@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Spring Boot AOT 编译流程</text>
+
+  <!-- 入口 -->
+  <rect x="310" y="50" width="180" height="45" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="2"/>
+  <text x="400" y="77" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Spring Boot 应用</text>
+
+  <line x1="400" y1="95" x2="400" y2="120" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- AOT Processing -->
+  <rect x="300" y="120" width="200" height="45" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="2"/>
+  <text x="400" y="147" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">AOT Processing</text>
+
+  <!-- 四个分支 -->
+  <line x1="330" y1="165" x2="120" y2="195" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="370" y1="165" x2="320" y2="195" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="430" y1="165" x2="480" y2="195" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="470" y1="165" x2="650" y2="195" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- 输出1 -->
+  <rect x="30" y="195" width="170" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="115" y="220" text-anchor="middle" font-size="12" fill="#333">生成 Bean 定义代码</text>
+
+  <!-- 输出2 -->
+  <rect x="230" y="195" width="170" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="315" y="220" text-anchor="middle" font-size="12" fill="#333">生成反射配置</text>
+
+  <!-- 输出3 -->
+  <rect x="430" y="195" width="170" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="515" y="220" text-anchor="middle" font-size="12" fill="#333">生成资源文件清单</text>
+
+  <!-- 输出4 -->
+  <rect x="630" y="195" width="140" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="700" y="220" text-anchor="middle" font-size="12" fill="#333">生成代理类</text>
+
+  <!-- 汇聚到 GraalVM -->
+  <line x1="115" y1="235" x2="350" y2="270" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="315" y1="235" x2="370" y2="270" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="515" y1="235" x2="430" y2="270" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="700" y1="235" x2="450" y2="270" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- GraalVM Native Image Compiler -->
+  <rect x="280" y="270" width="240" height="45" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="2"/>
+  <text x="400" y="297" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">GraalVM Native Image Compiler</text>
+
+  <line x1="400" y1="315" x2="400" y2="330" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- 输出 -->
+  <rect x="310" y="330" width="180" height="0" fill="none"/>
+  <text x="400" y="345" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">Native 可执行文件</text>
+</svg>

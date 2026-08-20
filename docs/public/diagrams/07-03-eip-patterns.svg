@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="20" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">EIP 模式组合：订单处理流程</text>
+
+  <!-- 原始订单 -->
+  <rect x="10" y="45" width="80" height="35" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="50" y="67" text-anchor="middle" font-size="12" fill="#333">原始订单</text>
+
+  <line x1="90" y1="62" x2="108" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- Filter -->
+  <rect x="110" y="45" width="90" height="35" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="155" y="62" text-anchor="middle" font-size="11" fill="#333">Filter</text>
+  <text x="155" y="75" text-anchor="middle" font-size="10" fill="#666">过滤无效</text>
+
+  <line x1="200" y1="62" x2="218" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- Transformer -->
+  <rect x="220" y="45" width="100" height="35" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="270" y="62" text-anchor="middle" font-size="11" fill="#333">Transformer</text>
+  <text x="270" y="75" text-anchor="middle" font-size="10" fill="#666">格式转换</text>
+
+  <line x1="320" y1="62" x2="338" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- Router -->
+  <rect x="340" y="45" width="80" height="35" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="380" y="67" text-anchor="middle" font-size="11" fill="#333">Router</text>
+
+  <!-- Branch paths -->
+  <line x1="420" y1="55" x2="468" y2="40" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="420" y1="70" x2="468" y2="80" stroke="#666" marker-end="url(#arrow)"/>
+
+  <text x="445" y="42" text-anchor="middle" font-size="10" fill="#666">大单</text>
+  <text x="445" y="85" text-anchor="middle" font-size="10" fill="#666">小单</text>
+
+  <!-- 审核通道 -->
+  <rect x="470" y="25" width="80" height="30" rx="6" fill="#fce4ec" stroke="#ef9a9a"/>
+  <text x="510" y="45" text-anchor="middle" font-size="11" fill="#333">审核通道</text>
+
+  <!-- 直接处理 -->
+  <rect x="470" y="65" width="80" height="30" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="510" y="85" text-anchor="middle" font-size="11" fill="#333">直接处理</text>
+
+  <!-- Continue from 直接处理 -->
+  <line x1="550" y1="80" x2="578" y2="80" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- Splitter -->
+  <rect x="580" y="63" width="80" height="35" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="620" y="85" text-anchor="middle" font-size="11" fill="#333">Splitter</text>
+
+  <line x1="660" y1="80" x2="678" y2="80" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- Aggregator -->
+  <rect x="680" y="63" width="80" height="35" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="720" y="80" text-anchor="middle" font-size="11" fill="#333">Aggregator</text>
+  <text x="720" y="93" text-anchor="middle" font-size="10" fill="#666">聚合结果</text>
+</svg>

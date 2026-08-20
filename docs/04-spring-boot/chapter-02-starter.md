@@ -240,17 +240,7 @@ public class OrderController {
 
 来一张完整的流程图：
 
-```mermaid
-graph TD
-    A["引入 starter"] --> B["传递引入 autoconfigure 模块"]
-    B --> C["AutoConfiguration.imports 注册配置类"]
-    C --> D["Spring Boot 扫描到配置类"]
-    D --> E["@ConditionalOnClass 满足"]
-    E --> F["@ConditionalOnMissingBean 满足"]
-    F --> G["从 application.yml 绑定配置"]
-    G --> H["创建 Bean 注入容器"]
-    H --> I["用户 @Autowired 直接使用"]
-```
+![Starter 工作流程](/diagrams/04-02-starter-flow.svg)
 
 ## 版本仲裁：为什么你不用管版本号
 

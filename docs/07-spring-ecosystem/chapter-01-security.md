@@ -26,25 +26,7 @@ UsernamePasswordAuthenticationToken auth =
 
 整个认证流程可以用一张图说清楚：
 
-```mermaid
-sequenceDiagram
-    participant C as 客户端
-    participant F as SecurityFilterChain
-    participant AM as AuthenticationManager
-    participant UP as UserDetailsService
-    participant DB as 数据库
-
-    C->>F: 请求 /api/users (携带凭证)
-    F->>AM: 提交 Authentication 对象
-    AM->>UP: loadUserByUsername("zhangsan")
-    UP->>DB: 查询用户信息
-    DB-->>UP: User(密码哈希, 角色列表)
-    UP-->>AM: UserDetails
-    AM->>AM: 密码比对
-    AM-->>F: 认证成功，返回完整 Authentication
-    F->>F: 检查授权（角色/权限是否匹配）
-    F-->>C: 200 OK 或 403 Forbidden
-```
+![Spring Security 认证流程](/diagrams/07-01-auth-flow.svg)
 
 这里有个容易踩的坑：**认证通过不代表能访问资源**。认证只证明"你是合法用户"，授权才决定"你有没有权限访问这个接口"。很多新手写的代码认证成功了却返回 403，就是因为没配置授权规则。
 
@@ -52,15 +34,7 @@ sequenceDiagram
 
 Spring Security 本质上就是一堆 Filter 组成的链。每个请求进来，先过一遍这条链，链上的每个 Filter 负责一件事。
 
-```mermaid
-graph LR
-    A[请求进入] --> B[SecurityContextFilter]
-    B --> C[UsernamePasswordFilter]
-    C --> D[BasicAuthenticationFilter]
-    D --> E[ExceptionTranslationFilter]
-    E --> F[FilterSecurityInterceptor]
-    F --> G[Controller]
-```
+![Security FilterChain](/diagrams/07-01-filter-chain.svg)
 
 核心的几个 Filter：
 

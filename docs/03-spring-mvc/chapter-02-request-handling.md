@@ -208,24 +208,7 @@ public String list(Model model) {
 
 这个 `"user/list"` 字符串会被 `ViewResolver` 解析成一个实际的 View 对象。比如 `InternalResourceViewResolver` 会把它映射到 `/WEB-INF/views/user/list.jsp`。
 
-```mermaid
-sequenceDiagram
-    participant DA as DispatcherServlet
-    participant HA as HandlerAdapter
-    participant C as Controller
-    participant VR as ViewResolver
-    participant V as View
-    participant Client as 客户端
-
-    DA->>HA: handle(request, response)
-    HA->>C: 调用 Controller 方法
-    C-->>HA: 返回 ModelAndView
-    HA-->>DA: 返回 ModelAndView
-    DA->>VR: resolveViewName("user/list")
-    VR-->>DA: 返回 View 对象
-    DA->>V: render(model, request, response)
-    V-->>Client: HTML 页面
-```
+![请求处理与视图解析时序](/diagrams/03-02-request-view-flow.svg)
 
 ### HandlerMethodReturnValueHandler
 
@@ -267,28 +250,7 @@ public @interface RestController {
 
 现在把所有步骤串起来，画一张完整的流程图：
 
-```mermaid
-flowchart TD
-    A[HTTP 请求进入] --> B[DispatcherServlet.doDispatch]
-    B --> C[checkMultipart 检查文件上传]
-    C --> D[getHandler 查找处理器]
-    D --> E{找到了吗?}
-    E -->|否| F[返回 404]
-    E -->|是| G[getHandlerAdapter 查找适配器]
-    G --> H[拦截器 preHandle]
-    H --> I{preHandle 放行?}
-    I -->|否| J[拦截器已处理响应]
-    I -->|是| K[HandlerAdapter.handle 执行 Controller 方法]
-    K --> L[拦截器 postHandle]
-    L --> M[processDispatchResult]
-    M --> N{有 ModelAndView 且有 View?}
-    N -->|是| O[ViewResolver 解析视图]
-    O --> P[View.render 渲染]
-    P --> Q[返回响应]
-    N -->|否| R[直接写响应体 / 返回]
-    R --> Q
-    Q --> S[拦截器 afterCompletion]
-```
+![doDispatch 完整请求处理流程](/diagrams/03-02-dodispatch-flow.svg)
 
 用文字再过一遍：
 

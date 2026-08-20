@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; fill: #333; }
+    .header { font-size: 13px; font-weight: bold; fill: #fff; }
+    .msg { font-size: 12px; fill: #555; }
+    .life { stroke: #999; stroke-width: 1.5; }
+    .call { stroke: #1976d2; stroke-width: 1.5; marker-end: url(#arrow-blue); }
+    .ret { stroke: #666; stroke-width: 1; stroke-dasharray: 5 3; marker-end: url(#arrow); }
+    .alt-box { fill: #f5f5f5; stroke: #ccc; stroke-width: 1; }
+    .alt-label { font-size: 11px; fill: #999; font-weight: bold; }
+  </style>
+
+  <!-- Participant headers -->
+  <rect x="30" y="15" width="100" height="32" rx="6" fill="#1976d2"/>
+  <text x="80" y="36" text-anchor="middle" class="header">调用方</text>
+
+  <rect x="190" y="15" width="100" height="32" rx="6" fill="#388e3c"/>
+  <text x="240" y="36" text-anchor="middle" class="header">代理对象</text>
+
+  <rect x="360" y="15" width="160" height="32" rx="6" fill="#e65100"/>
+  <text x="440" y="36" text-anchor="middle" class="header">TransactionInterceptor</text>
+
+  <rect x="590" y="15" width="180" height="32" rx="6" fill="#7b1fa2"/>
+  <text x="680" y="36" text-anchor="middle" class="header">PlatformTransactionManager</text>
+
+  <!-- Lifelines -->
+  <line x1="80" y1="47" x2="80" y2="430" class="life"/>
+  <line x1="240" y1="47" x2="240" y2="430" class="life"/>
+  <line x1="440" y1="47" x2="440" y2="430" class="life"/>
+  <line x1="680" y1="47" x2="680" y2="430" class="life"/>
+
+  <!-- Call 1 -->
+  <line x1="80" y1="75" x2="230" y2="75" class="call"/>
+  <text x="155" y="68" text-anchor="middle" class="msg">orderService.createOrder(...)</text>
+
+  <!-- Call 2 -->
+  <line x1="240" y1="105" x2="430" y2="105" class="call"/>
+  <text x="335" y="98" text-anchor="middle" class="msg">拦截方法调用</text>
+
+  <!-- Call 3 -->
+  <line x1="440" y1="135" x2="670" y2="135" class="call"/>
+  <text x="555" y="128" text-anchor="middle" class="msg">getTransaction()</text>
+
+  <!-- Return TM -->
+  <line x1="670" y1="165" x2="450" y2="165" class="ret"/>
+  <text x="560" y="158" text-anchor="middle" class="msg">返回 TransactionStatus</text>
+
+  <!-- Call 4 -->
+  <line x1="440" y1="195" x2="250" y2="195" class="call"/>
+  <text x="345" y="188" text-anchor="middle" class="msg">调用目标方法</text>
+
+  <!-- Call 5 -->
+  <line x1="240" y1="225" x2="240" y2="255" class="call" style="marker-end:none"/>
+  <rect x="210" y="225" width="60" height="30" rx="4" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="240" y="244" text-anchor="middle" class="msg">执行业务SQL</text>
+
+  <!-- Return from target -->
+  <line x1="230" y1="275" x2="430" y2="275" class="ret" marker-end="url(#arrow)"/>
+  <text x="330" y="268" text-anchor="middle" class="msg">正常返回 / 抛出异常</text>
+
+  <!-- ALT box: 正常返回 -->
+  <rect x="420" y="290" width="260" height="55" rx="4" class="alt-box"/>
+  <text x="425" y="305" class="alt-label">alt 正常返回</text>
+  <line x1="440" y1="315" x2="670" y2="315" class="call"/>
+  <text x="555" y="310" text-anchor="middle" class="msg">commit()</text>
+
+  <!-- ALT box: 异常 -->
+  <rect x="420" y="350" width="260" height="55" rx="4" class="alt-box"/>
+  <text x="425" y="365" class="alt-label">else 抛出异常且符合回滚条件</text>
+  <line x1="440" y1="375" x2="670" y2="375" class="call"/>
+  <text x="555" y="370" text-anchor="middle" class="msg">rollback()</text>
+
+  <!-- Final return -->
+  <line x1="430" y1="420" x2="90" y2="420" class="ret"/>
+  <text x="260" y="413" text-anchor="middle" class="msg">返回结果 / 抛出异常</text>
+</svg>

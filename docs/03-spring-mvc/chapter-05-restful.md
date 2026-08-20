@@ -61,20 +61,7 @@ public class UserApiController {
 
 它的工作流程：
 
-```mermaid
-sequenceDiagram
-    participant DA as DispatcherServlet
-    participant RRRP as RequestResponseBodyMethodProcessor
-    participant HMC as HttpMessageConverter
-    participant Resp as HttpServletResponse
-
-    DA->>RRRP: handleReturnValue(user)
-    RRRP->>RRRP: 确定 MediaType（根据 Accept 头）
-    RRRP->>RRRP: 查找匹配的 HttpMessageConverter
-    RRRP->>HMC: write(user, mediaType, response)
-    HMC->>Resp: 写入序列化后的数据
-    Note over Resp: Content-Type: application/json
-```
+![ResponseBody 响应写入时序](/diagrams/03-05-responsebody-write.svg)
 
 核心步骤：
 

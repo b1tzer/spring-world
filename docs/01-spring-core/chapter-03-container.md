@@ -40,18 +40,7 @@ public interface BeanFactory {
 
 关键特性：**懒加载。** 默认情况下，BeanFactory 不会在启动时创建所有 Bean，而是在你第一次 `getBean()` 的时候才创建。就像便利店不会把所有商品都摆出来——你要什么，它去仓库拿。
 
-```mermaid
-sequenceDiagram
-    participant C as BeanFactory（便利店）
-    participant B as Bean
-
-    Note over C: 启动完成，货架是空的
-    C->>C: getBean("userService")
-    C->>B: 第一次请求 → 去仓库拿（实例化、注入、初始化）
-    B-->>C: 返回实例
-    C->>C: getBean("userService") 再次请求
-    Note over C: 直接从柜台给你（单例缓存）
-```
+![BeanFactory 懒加载机制](/diagrams/3-1-beanfactory-lazy.svg)
 
 好处是启动快——不用在一开始就创建几百个 Bean。坏处是第一个请求会慢，因为你触发了 Bean 的创建。
 
@@ -115,14 +104,7 @@ public interface BeanDefinition {
 
 当你写 `@Service` 时，Spring 做了什么？
 
-```mermaid
-graph TD
-    A["@Component / @Service"] -->|扫描| B[ClassPathBeanDefinitionScanner]
-    B -->|解析| C[AnnotatedBeanDefinition]
-    C -->|注册| D[BeanDefinitionRegistry]
-    D -->|存储| E["BeanDefinition Map（菜谱柜）"]
-    E -->|getBean 时| F["实例化 Bean（开始做菜）"]
-```
+![从注解到 BeanDefinition](/diagrams/3-2-beandefinition-flow.svg)
 
 1. **扫描**：Spring 扫描指定包下带 `@Component` 的类（`@Service`、`@Repository`、`@Controller` 都是它的派生注解）
 2. **解析**：把类的信息解析成 BeanDefinition——类名、作用域、依赖、初始化方法
@@ -256,13 +238,7 @@ public class OrderEventListener {
 
 为什么用事件而不是直接调用？**解耦。** `OrderService` 不需要知道谁在监听。以后加新的监听逻辑（发短信、更新推荐系统），只需要加一个 `@EventListener`，`OrderService` 完全不用改。
 
-```mermaid
-graph LR
-    A[OrderService<br/>电台] -->|publishEvent<br/>广播| B[ApplicationContext<br/>广播塔]
-    B -->|通知| C[OrderEventListener<br/>收音机 1]
-    B -->|通知| D[InventoryEventListener<br/>收音机 2]
-    B -->|通知| E[NotificationEventListener<br/>收音机 3]
-```
+![事件机制：发布/订阅](/diagrams/3-3-event-mechanism.svg)
 
 ### 同步 vs 异步
 
@@ -301,15 +277,7 @@ Spring 支持容器的层次结构——一个容器可以有父容器。
 
 在传统的 Spring MVC 项目里，存在两个容器：
 
-```mermaid
-graph TD
-    A["Root 容器（爸爸）"] -->|parent| B["Servlet 容器（儿子）"]
-    A --- C[Service Beans]
-    A --- D[Repository Beans]
-    A --- E[DataSource Beans]
-    B --- F[Controller Beans]
-    B --- G[ViewResolver Beans]
-```
+![Spring MVC 父子容器](/diagrams/3-4-parent-child-container.svg)
 
 - **Root 容器**：存放 Service、Repository 等业务 Bean
 - **Servlet 容器**：存放 Controller、ViewResolver 等 Web 相关 Bean

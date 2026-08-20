@@ -18,22 +18,7 @@
 
 GraalVM Native Image 的思路是：**在编译时就把这些事情做完，直接生成机器码的可执行文件**。
 
-```mermaid
-graph LR
-    A[传统 JVM 模式] --> B[源代码]
-    B --> C[.class 字节码]
-    C --> D[JVM 加载]
-    D --> E[解释执行]
-    E --> F[JIT 编译热点代码]
-    F --> G[运行]
-
-    H[Native Image 模式] --> I[源代码]
-    I --> J[AOT 分析]
-    J --> K[闭包分析]
-    K --> L[直接编译为机器码]
-    L --> M[可执行文件]
-    M --> N[直接运行，不需要 JVM]
-```
+![传统 JVM 模式 vs Native Image 模式](/diagrams/07-04-jvm-vs-native.svg)
 
 ## AOT 编译原理
 
@@ -65,19 +50,7 @@ Spring Boot 3.0 + Spring Framework 6.0 原生支持 AOT。它在编译阶段做�
 3. **反射配置**：收集所有需要反射的类，生成 `reflect-config.json`
 4. **代理生成**：提前生成 CGLIB 代理类
 
-```mermaid
-graph TD
-    A[Spring Boot 应用] --> B[AOT Processing]
-    B --> C[生成 Bean 定义代码]
-    B --> D[生成反射配置]
-    B --> E[生成资源文件清单]
-    B --> F[生成代理类]
-    C --> G[GraalVM Native Image Compiler]
-    D --> G
-    E --> G
-    F --> G
-    G --> H[Native 可执行文件]
-```
+![Spring Boot AOT 编译流程](/diagrams/07-04-aot-compile.svg)
 
 ## 构建 Native Image
 

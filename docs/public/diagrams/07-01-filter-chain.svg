@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="20" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Spring Security FilterChain</text>
+
+  <!-- Nodes -->
+  <rect x="10" y="45" width="90" height="35" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="55" y="67" text-anchor="middle" font-size="12" fill="#333">请求进入</text>
+
+  <line x1="100" y1="62" x2="118" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <rect x="120" y="45" width="100" height="35" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="170" y="67" text-anchor="middle" font-size="11" fill="#333">SecurityContext</text>
+
+  <line x1="220" y1="62" x2="238" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <rect x="240" y="45" width="110" height="35" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="295" y="67" text-anchor="middle" font-size="11" fill="#333">UsernamePassword</text>
+
+  <line x1="350" y1="62" x2="368" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <rect x="370" y="45" width="100" height="35" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="420" y="67" text-anchor="middle" font-size="11" fill="#333">BasicAuth</text>
+
+  <line x1="470" y1="62" x2="488" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <rect x="490" y="45" width="110" height="35" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="545" y="67" text-anchor="middle" font-size="11" fill="#333">ExceptionTranslation</text>
+
+  <line x1="600" y1="62" x2="618" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <rect x="620" y="45" width="110" height="35" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="675" y="67" text-anchor="middle" font-size="11" fill="#333">FilterSecurity</text>
+
+  <line x1="730" y1="62" x2="748" y2="62" stroke="#666" marker-end="url(#arrow)"/>
+
+  <rect x="750" y="45" width="45" height="35" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="772" y="67" text-anchor="middle" font-size="12" fill="#333">Controller</text>
+</svg>

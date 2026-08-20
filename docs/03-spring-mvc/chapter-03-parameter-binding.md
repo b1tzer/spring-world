@@ -184,21 +184,7 @@ public User create(@RequestBody @Valid UserDTO dto) {
 2. 找到支持该媒体类型的 `HttpMessageConverter`（如 `MappingJackson2HttpMessageConverter`）
 3. 调用 Converter 的 `read` 方法，把请求体反序列化为 Java 对象
 
-```mermaid
-sequenceDiagram
-    participant Controller as Controller 方法
-    participant RRRP as RequestResponseBodyMethodProcessor
-    participant HMC as HttpMessageConverter
-    participant Request as HttpServletRequest
-
-    Controller->>RRRP: resolveArgument()
-    RRRP->>Request: getContentType()
-    RRRP->>RRRP: 查找匹配的 HttpMessageConverter
-    RRRP->>HMC: read(Class, request)
-    HMC->>Request: 读取 InputStream
-    HMC-->>RRRP: 返回反序列化后的对象
-    RRRP-->>Controller: 返回参数值
-```
+![RequestBody 参数解析时序](/diagrams/03-03-requestbody-parse.svg)
 
 ### HttpMessageConverter
 
@@ -404,23 +390,7 @@ public User createUser(
 }
 ```
 
-```mermaid
-flowchart LR
-    A[HTTP 请求] --> B[DispatcherServlet]
-    B --> C[HandlerAdapter]
-    C --> D[参数解析循环]
-    D --> E1[PathVariableResolver<br/>deptId = 42]
-    D --> E2[RequestParamResolver<br/>source = "system"]
-    D --> E3[RequestHeaderResolver<br/>traceId = "abc-123"]
-    D --> E4[RequestBodyResolver<br/>dto = UserDTO对象]
-    D --> E5[ServletRequestResolver<br/>request = 原始请求]
-    E1 --> F[收集所有参数值]
-    E2 --> F
-    E3 --> F
-    E4 --> F
-    E5 --> F
-    F --> G[反射调用 Controller 方法]
-```
+![参数绑定流程](/diagrams/03-03-param-binding-flow.svg)
 
 对于每个参数，`RequestMappingHandlerAdapter` 的处理逻辑是：
 

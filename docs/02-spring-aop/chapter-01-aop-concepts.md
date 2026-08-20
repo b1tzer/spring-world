@@ -72,28 +72,7 @@ public class OrderService {
 
 这种散落在各个方法里、跟核心业务无关但又必须做的逻辑，就叫**横切关注点**（Cross-Cutting Concerns）。叫"横切"是因为它们**横着穿过了所有纵向的业务模块**——不管是订单服务、用户服务还是支付服务，都得写一遍日志、做一遍权限校验。
 
-```mermaid
-graph LR
-    subgraph 纵向业务模块
-        A[订单服务]
-        B[用户服务]
-        C[支付服务]
-    end
-    subgraph 横切关注点
-        D[日志]
-        E[权限]
-        F[事务]
-    end
-    D -.-> A
-    D -.-> B
-    D -.-> C
-    E -.-> A
-    E -.-> B
-    E -.-> C
-    F -.-> A
-    F -.-> B
-    F -.-> C
-```
+![横切关注点与纵向业务模块的关系](/diagrams/2-1-cross-cutting-concerns.svg)
 
 传统做法有几个问题：
 
@@ -166,18 +145,7 @@ public class LoggingAspect {
 
 四个概念的关系用一句话总结：**Aspect 定义了一组 Pointcut 和 Advice，Pointcut 负责"拦谁"，Advice 负责"干什么"，JoinPoint 是运行时被拦截的那个具体方法。**
 
-```mermaid
-graph TB
-    A["Aspect 切面"] --> B["Pointcut 切点<br/>哪些方法要拦截"]
-    A --> C["Advice 通知<br/>拦截后做什么"]
-    B --> D["JoinPoint 连接点<br/>运行时被拦截的方法"]
-    C --> D
-
-    style A fill:#f9f,stroke:#333
-    style B fill:#bbf,stroke:#333
-    style C fill:#bfb,stroke:#333
-    style D fill:#fbb,stroke:#333
-```
+![AOP 核心概念关系图](/diagrams/2-1-aop-concepts.svg)
 
 这里有个容易混淆的点：**JoinPoint 和 Pointcut 不是一回事**。JoinPoint 是所有可能被拦截的点（Spring AOP 里就是所有方法调用），Pointcut 是一个表达式，用来从 JoinPoint 里筛选出你关心的那些。可以说 Pointcut 是 JoinPoint 的过滤器。
 

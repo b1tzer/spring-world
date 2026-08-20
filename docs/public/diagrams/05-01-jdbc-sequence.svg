@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">原生 JDBC 调用流程</text>
+
+  <!-- Participants -->
+  <rect x="80" y="50" rx="6" width="120" height="40" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="140" y="75" text-anchor="middle" font-weight="bold" fill="#333">应用代码</text>
+
+  <rect x="340" y="50" rx="6" width="120" height="40" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="75" text-anchor="middle" font-weight="bold" fill="#333">原生 JDBC</text>
+
+  <rect x="600" y="50" rx="6" width="120" height="40" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="660" y="75" text-anchor="middle" font-weight="bold" fill="#333">数据库</text>
+
+  <!-- Vertical lines -->
+  <line x1="140" y1="90" x2="140" y2="490" stroke="#999" stroke-dasharray="4"/>
+  <line x1="400" y1="90" x2="400" y2="490" stroke="#999" stroke-dasharray="4"/>
+  <line x1="660" y1="90" x2="660" y2="490" stroke="#999" stroke-dasharray="4"/>
+
+  <!-- Step 1: getConnection -->
+  <line x1="144" y1="120" x2="396" y2="120" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="270" y="115" text-anchor="middle" fill="#333">getConnection()</text>
+
+  <line x1="404" y1="150" x2="656" y2="150" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="530" y="145" text-anchor="middle" fill="#333">TCP 三次握手 + 认证</text>
+
+  <line x1="656" y1="175" x2="404" y2="175" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <text x="530" y="170" text-anchor="middle" fill="#333">连接就绪</text>
+
+  <line x1="396" y1="200" x2="144" y2="200" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <text x="270" y="195" text-anchor="middle" fill="#333">Connection</text>
+
+  <!-- Step 2: prepareStatement -->
+  <line x1="144" y1="230" x2="396" y2="230" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="270" y="225" text-anchor="middle" fill="#333">prepareStatement("SELECT...")</text>
+
+  <line x1="396" y1="255" x2="144" y2="255" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <text x="270" y="250" text-anchor="middle" fill="#333">PreparedStatement</text>
+
+  <!-- Step 3: execute -->
+  <line x1="144" y1="285" x2="396" y2="285" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="270" y="280" text-anchor="middle" fill="#333">setLong(1, id) + executeQuery()</text>
+
+  <line x1="404" y1="310" x2="656" y2="310" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="530" y="305" text-anchor="middle" fill="#333">执行 SQL</text>
+
+  <line x1="656" y1="335" x2="404" y2="335" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <text x="530" y="330" text-anchor="middle" fill="#333">ResultSet</text>
+
+  <line x1="396" y1="360" x2="144" y2="360" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <text x="270" y="355" text-anchor="middle" fill="#333">ResultSet</text>
+
+  <!-- Step 4: manual mapping -->
+  <rect x="100" y="380" rx="6" width="80" height="30" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="140" y="400" text-anchor="middle" fill="#333" font-size="12">手动映射</text>
+  <text x="270" y="395" text-anchor="middle" fill="#666" font-size="12">rs.getString("name") → user.name</text>
+
+  <!-- Step 5: close -->
+  <line x1="144" y1="425" x2="396" y2="425" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="270" y="420" text-anchor="middle" fill="#333">rs.close() / ps.close()</text>
+
+  <line x1="144" y1="455" x2="396" y2="455" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="270" y="450" text-anchor="middle" fill="#333">conn.close()</text>
+
+  <line x1="404" y1="480" x2="656" y2="480" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="530" y="475" text-anchor="middle" fill="#333">关闭连接</text>
+</svg>

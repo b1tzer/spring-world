@@ -120,24 +120,7 @@ public class AllAdviceAspect {
 
 注意 `@Around` 在异常时的处理：如果你在 `@Around` 里 catch 了异常不抛出，后面的 `@AfterThrowing` 就不会触发。这是 `@Around` 的特殊之处——它的权力最大，可以吞掉异常、修改返回值、甚至不调用 `proceed()` 让目标方法根本不执行。
 
-```mermaid
-flowchart TD
-    A["方法被调用"] --> B["@Around 前置"]
-    B --> C["@Before"]
-    C --> D{"目标方法执行"}
-    D -->|正常返回| E["@AfterReturning"]
-    D -->|抛出异常| F["@AfterThrowing"]
-    E --> G["@After"]
-    F --> G
-    G --> H["@Around 后置"]
-    H --> I["返回结果"]
-
-    style B fill:#f9f,stroke:#333
-    style C fill:#bbf,stroke:#333
-    style E fill:#bfb,stroke:#333
-    style F fill:#fbb,stroke:#333
-    style G fill:#ff9,stroke:#333
-```
+![通知执行顺序流程图](/diagrams/2-3-advice-execution-order.svg)
 
 **多个切面作用于同一个方法时，执行顺序怎么定？**
 

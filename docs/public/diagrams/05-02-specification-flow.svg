@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow5" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Specification 动态查询流程</text>
+
+  <!-- Request -->
+  <rect x="30" y="80" rx="6" width="100" height="40" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="80" y="105" text-anchor="middle" fill="#333">请求参数</text>
+
+  <!-- Decision -->
+  <polygon points="200,80 280,120 200,160 120,120" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="200" y="115" text-anchor="middle" fill="#333" font-size="12">条件</text>
+  <text x="200" y="130" text-anchor="middle" fill="#333" font-size="12">判断</text>
+
+  <line x1="130" y1="100" x2="120" y2="110" stroke="#666" marker-end="url(#arrow5)"/>
+
+  <!-- Conditions -->
+  <rect x="340" y="50" rx="6" width="160" height="35" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="420" y="72" text-anchor="middle" fill="#333" font-size="12">name 不为空 → LIKE '%张%'</text>
+
+  <rect x="340" y="100" rx="6" width="160" height="35" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="420" y="122" text-anchor="middle" fill="#333" font-size="12">minAge 不为空 → age &gt;= 18</text>
+
+  <rect x="340" y="150" rx="6" width="160" height="35" fill="#ffcdd2" stroke="#ef9a9a"/>
+  <text x="420" y="172" text-anchor="middle" fill="#333" font-size="12">status 为空 → 跳过</text>
+
+  <!-- Arrows from decision -->
+  <line x1="280" y1="100" x2="338" y2="67" stroke="#666" marker-end="url(#arrow5)"/>
+  <text x="310" y="78" fill="#666" font-size="11">name 有值</text>
+
+  <line x1="280" y1="115" x2="338" y2="117" stroke="#666" marker-end="url(#arrow5)"/>
+  <text x="310" y="128" fill="#666" font-size="11">minAge 有值</text>
+
+  <line x1="280" y1="135" x2="338" y2="167" stroke="#666" stroke-dasharray="4" marker-end="url(#arrow5)"/>
+  <text x="310" y="162" fill="#999" font-size="11">null</text>
+
+  <!-- AND merge -->
+  <rect x="570" y="90" rx="6" width="80" height="40" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="610" y="115" text-anchor="middle" fill="#333" font-weight="bold">AND 拼接</text>
+
+  <line x1="500" y1="67" x2="568" y2="100" stroke="#666" marker-end="url(#arrow5)"/>
+  <line x1="500" y1="117" x2="568" y2="115" stroke="#666" marker-end="url(#arrow5)"/>
+
+  <!-- Final SQL -->
+  <rect x="690" y="85" rx="6" width="100" height="50" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="740" y="105" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">最终 SQL</text>
+  <text x="740" y="125" text-anchor="middle" fill="#666" font-size="11">WHERE name LIKE</text>
+
+  <line x1="650" y1="110" x2="688" y2="110" stroke="#666" marker-end="url(#arrow5)"/>
+
+  <!-- Bottom note -->
+  <text x="400" y="230" text-anchor="middle" fill="#666" font-size="13">Specification.where().and() 自动忽略 null 条件，无需手动判断</text>
+</svg>

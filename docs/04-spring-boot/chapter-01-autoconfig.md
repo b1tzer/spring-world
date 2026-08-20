@@ -88,16 +88,7 @@ org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
 
 来看整个加载流程：
 
-```mermaid
-graph TD
-    A["@SpringBootApplication"] --> B["@EnableAutoConfiguration"]
-    B --> C["@Import(AutoConfigurationImportSelector)"]
-    C --> D["selectImports()"]
-    D --> E["扫描所有 jar 包的配置清单"]
-    E --> F["收集上百个自动配置类"]
-    F --> G["条件过滤"]
-    G --> H["注册到容器"]
-```
+![自动配置加载流程](/diagrams/04-01-autoconfig-flow.svg)
 
 到这里，你已经知道了自动配置的"进货"环节：`@Import` 触发 `selectImports()`，`selectImports()` 读配置清单，配置清单列出了所有候选的自动配置类。但问题来了——清单里列了上百个配置类，全注册进去那不乱套了？
 
@@ -164,17 +155,7 @@ public class WebMvcAutoConfiguration {
 
 整个决策过程：
 
-```mermaid
-graph LR
-    A["引入 spring-boot-starter-web"] --> B["classpath 有了 DispatcherServlet"]
-    B --> C["@ConditionalOnClass 满足"]
-    C --> D["WebMvcAutoConfiguration 生效"]
-    D --> E["自动注册 DispatcherServlet、ViewResolver 等"]
-    
-    F["没引入 starter-web"] --> G["classpath 无 DispatcherServlet"]
-    G --> H["@ConditionalOnClass 不满足"]
-    H --> I["配置类被跳过"]
-```
+![条件装配决策过程](/diagrams/04-01-conditional-class.svg)
 
 **这就是"引入一个 jar 包就自动配好了一切"的秘密：jar 包带来了类，类满足了条件，条件触发了配置。**
 

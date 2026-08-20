@@ -63,24 +63,7 @@ public class OrderService {
 
 Spring 的 IoC 容器就是这个 **餐厅**。
 
-```mermaid
-graph LR
-    subgraph "自己做饭（控制正转）"
-        A[OrderService] -->|自己 new| B[UserService]
-        B -->|自己 new| C[JdbcUserRepository]
-        A -->|自己 new| D[PaymentService]
-        A -->|自己 new| E[ProductService]
-        E -->|自己 new| F[JdbcProductRepository]
-    end
-
-    subgraph "去餐厅（IoC）"
-        G[Spring 容器] -->|上菜| H[OrderService]
-        G -->|上菜| I[UserService]
-        G -->|上菜| J[UserRepository]
-        G -->|上菜| K[PaymentService]
-        G -->|上菜| L[ProductService]
-    end
-```
+![控制正转 vs IoC](/diagrams/1-1-ioc-flow.svg)
 
 左边一团乱麻，右边井然有序。区别在哪？**"谁来创建"这件事，反转了。**
 
@@ -232,20 +215,7 @@ private UserRepository repo;  // 先找名字叫 "repo" 的 Bean
 
 `@Resource` 是 JSR-250 标准注解，**默认按名字（byName）匹配**。就像你去餐厅说"我要宫保鸡丁"——直接报菜名，不关心它是川菜还是鲁菜。
 
-```mermaid
-graph TD
-    A["@Autowired<br/>按类型找"] --> B{找到了几个?}
-    B -->|1个| C[✅ 直接注入]
-    B -->|多个| D{有 @Qualifier?}
-    D -->|有| E[按限定符选]
-    D -->|没有| F{有 @Primary?}
-    F -->|有| G[选 Primary]
-    F -->|没有| H[❌ 报错]
-
-    I["@Resource<br/>按名字找"] --> J{名字匹配?}
-    J -->|是| K[✅ 直接注入]
-    J -->|否| L[退回按类型找]
-```
+![Autowired vs Resource 注入流程](/diagrams/1-2-di-match.svg)
 
 | | @Autowired | @Resource |
 |---|---|---|
@@ -286,28 +256,7 @@ A 要创建完才能注入给 B，B 要创建完才能注入给 A。互相等，
 
 Spring 的三级缓存就是这个思路：
 
-```mermaid
-sequenceDiagram
-    participant C as Spring 容器
-    participant L1 as 一级缓存（成品）
-    participant L3 as 三级缓存（工厂）
-    participant A as Bean A
-    participant B as Bean B
-
-    C->>A: 1. 实例化 A（new A()，b 还是 null）
-    C->>L3: 2. 放入 A 的 ObjectFactory
-    C->>A: 3. 填充属性，发现需要 B
-    C->>B: 4. 实例化 B（new B()，a 还是 null）
-    C->>L3: 5. 放入 B 的 ObjectFactory
-    C->>B: 6. 填充属性，发现需要 A
-    C->>L3: 7. 调用 A 的 ObjectFactory
-    Note over L3: 返回 A（可能是代理版）
-    L3-->>C: 8. 拿到半成品 A
-    C->>B: 9. 注入到 B，B 初始化完成
-    C->>L1: 10. B 放入一级缓存
-    C->>A: 11. A 拿到完整的 B，注入
-    C->>L1: 12. A 放入一级缓存
-```
+![三级缓存解决循环依赖](/diagrams/1-3-three-level-cache.svg)
 
 三级缓存各存什么：
 

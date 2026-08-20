@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 180">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <style>text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; fill: #333; }</style>
+  <!-- 单体应用 -->
+  <rect x="20" y="60" width="120" height="60" rx="6" fill="#e8f5e9" stroke="#81c784" stroke-width="1.5"/>
+  <text x="80" y="95" text-anchor="middle">单体应用</text>
+  <!-- 模块化单体 -->
+  <rect x="210" y="60" width="120" height="60" rx="6" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="270" y="95" text-anchor="middle">模块化单体</text>
+  <!-- 垂直拆分 -->
+  <rect x="400" y="60" width="120" height="60" rx="6" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="460" y="95" text-anchor="middle">垂直拆分</text>
+  <!-- 微服务架构 -->
+  <rect x="590" y="60" width="150" height="60" rx="6" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="665" y="95" text-anchor="middle">微服务架构</text>
+  <!-- 箭头 -->
+  <line x1="140" y1="90" x2="210" y2="90" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="330" y1="90" x2="400" y2="90" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="520" y1="90" x2="590" y2="90" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+</svg>

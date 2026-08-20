@@ -6,31 +6,7 @@
 
 答案就是 AOP。`@Transactional` 的实现就是一个切面。Spring 在启动时注册了一个 `TransactionInterceptor`，它是一个 Advice，拦截所有标注了 `@Transactional` 的方法。流程长这样：
 
-```mermaid
-sequenceDiagram
-    participant C as 调用方
-    participant P as 代理对象
-    participant TI as TransactionInterceptor
-    participant TM as PlatformTransactionManager
-    participant DB as 数据库
-
-    C->>P: orderService.createOrder(...)
-    P->>TI: 拦截方法调用
-    TI->>TM: getTransaction()
-    TM->>DB: BEGIN / 获取连接
-    TM-->>TI: 返回 TransactionStatus
-    TI->>P: 调用目标方法
-    P->>DB: 执行业务 SQL
-    P-->>TI: 正常返回 / 抛出异常
-    alt 正常返回
-        TI->>TM: commit()
-        TM->>DB: COMMIT
-    else 抛出异常且符合回滚条件
-        TI->>TM: rollback()
-        TM->>DB: ROLLBACK
-    end
-    TI-->>C: 返回结果 / 抛出异常
-```
+![事务拦截器调用流程](/diagrams/2-4-tx-interceptor-flow.svg)
 
 看源码更清楚。`TransactionInterceptor.invoke()` 方法的核心逻辑：
 
@@ -467,28 +443,7 @@ public void createOrder(Long userId, OrderDTO dto) {
 
 遇到 `@Transactional` 不生效时，按以下顺序排查：
 
-```mermaid
-flowchart TD
-    A["@Transactional 不生效"] --> B{"方法是 public 的？"}
-    B -->|否| B1["改为 public 或用 AspectJ"]
-    B -->|是| C{"是自调用？"}
-    C -->|是| C1["注入自身或拆分 Bean"]
-    C -->|否| D{"异常被 catch 了？"}
-    D -->|是| D1["手动 setRollbackOnly 或重新抛出"]
-    D -->|否| E{"是 checked exception？"}
-    E -->|是| E1["加 rollbackFor = Exception.class"]
-    E -->|否| F{"数据库支持事务？"}
-    F -->|否| F1["换 InnoDB 引擎"]
-    F -->|是| G{"Bean 被 Spring 管理？"}
-    G -->|否| G1["加 @Service / @Component"]
-    G -->|是| H{"在多线程里调用？"}
-    H -->|是| H1["去掉多线程或让子线程自管事务"]
-    H -->|否| I{"final 方法/类？"}
-    I -->|是| I1["去掉 final"]
-    I -->|否| J{"propagation 配置对吗？"}
-    J -->|否| J1["改为 REQUIRED"]
-    J -->|是| K["检查代理是否生效：断点在 CGLIB 代理类上"]
-```
+![事务失效排查流程图](/diagrams/2-4-tx-troubleshoot.svg)
 
 **快速验证方法：** 在方法第一行加断点，看 `this` 的类型。如果显示 `OrderService$$EnhancerBySpringCGLIB`，说明代理生效了；如果显示 `OrderService`，说明没走代理。
 

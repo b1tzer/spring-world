@@ -35,28 +35,7 @@ public interface HandlerInterceptor {
 
 三个方法的执行时机用一张图说清楚：
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant DS as DispatcherServlet
-    participant IH as Interceptor.preHandle
-    participant HA as Handler (Controller)
-    participant IH2 as Interceptor.postHandle
-    participant VR as ViewResolver
-    participant IH3 as Interceptor.afterCompletion
-    
-    Client->>DS: HTTP Request
-    DS->>IH: preHandle()
-    alt 返回 false
-        IH-->>Client: 直接返回（401/403）
-    else 返回 true
-        IH->>HA: 执行 Handler
-        HA->>IH2: postHandle()
-        IH2->>VR: 渲染视图
-        VR->>IH3: afterCompletion()
-        IH3-->>Client: Response
-    end
-```
+![拦截器执行时序](/diagrams/03-06-interceptor-flow.svg)
 
 一个关键区别：`afterCompletion` **无论 Handler 是否抛异常都会执行**，适合做资源清理。而 `postHandle` 只在正常执行时才会调用，如果 Handler 抛了异常，`postHandle` 不会被调用。
 
@@ -223,15 +202,7 @@ public Result batchUpload(@RequestParam("files") MultipartFile[] files) {
 
 解析过程：
 
-```mermaid
-flowchart LR
-    A[HTTP Request<br>multipart/form-data] --> B[DispatcherServlet]
-    B --> C{有 MultipartResolver?}
-    C -->|是| D[MultipartResolver.resolveMultipart]
-    D --> E[将文件包装为<br>MultipartFile]
-    E --> F[Controller 收到<br>MultipartFile 参数]
-    C -->|否| G[普通 HttpServletRequest]
-```
+![MultipartResolver 文件上传流程](/diagrams/03-06-multipart-flow.svg)
 
 一个容易踩的坑：`MultipartFile` 的内容默认存在**临时文件**里，请求结束后会被清理。如果你需要异步处理文件内容，要先把内容读出来或者调用 `transferTo` 保存。
 

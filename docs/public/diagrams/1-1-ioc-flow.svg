@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#666"/></marker>
+    <marker id="arrG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4caf50"/></marker>
+  </defs>
+
+  <!-- Left panel -->
+  <rect x="10" y="10" width="380" height="380" rx="8" fill="#fff8e1" stroke="#e0c36a" stroke-width="1.5"/>
+  <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">自己做饭（控制正转）</text>
+
+  <rect x="30" y="60" width="130" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="95" y="83" text-anchor="middle" fill="#333">OrderService</text>
+
+  <rect x="30" y="130" width="130" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="95" y="153" text-anchor="middle" fill="#333">UserService</text>
+
+  <rect x="220" y="130" width="130" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="285" y="153" text-anchor="middle" fill="#333">PaymentService</text>
+
+  <rect x="30" y="200" width="130" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="95" y="223" text-anchor="middle" fill="#333">ProductService</text>
+
+  <rect x="30" y="270" width="150" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="105" y="293" text-anchor="middle" fill="#333">JdbcUserRepository</text>
+
+  <rect x="30" y="330" width="160" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="110" y="353" text-anchor="middle" fill="#333">JdbcProductRepository</text>
+
+  <!-- Arrows left -->
+  <line x1="70" y1="96" x2="70" y2="130" stroke="#666" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="160" y1="96" x2="245" y2="130" stroke="#666" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="95" y1="96" x2="95" y2="200" stroke="#666" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="70" y1="166" x2="70" y2="270" stroke="#666" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="70" y1="236" x2="70" y2="330" stroke="#666" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="55" y="118" font-size="10" fill="#999">new</text>
+  <text x="170" y="108" font-size="10" fill="#999">new</text>
+  <text x="100" y="155" font-size="10" fill="#999">new</text>
+  <text x="55" y="225" font-size="10" fill="#999">new</text>
+  <text x="55" y="290" font-size="10" fill="#999">new</text>
+
+  <!-- Right panel -->
+  <rect x="410" y="10" width="380" height="380" rx="8" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="600" y="42" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">去餐厅（IoC）</text>
+
+  <rect x="480" y="60" width="160" height="40" rx="6" fill="#bbdefb" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="560" y="85" text-anchor="middle" font-weight="bold" fill="#333">Spring 容器</text>
+
+  <rect x="440" y="140" width="130" height="34" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="505" y="162" text-anchor="middle" fill="#333">OrderService</text>
+
+  <rect x="440" y="190" width="130" height="34" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="505" y="212" text-anchor="middle" fill="#333">UserService</text>
+
+  <rect x="590" y="140" width="130" height="34" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="655" y="162" text-anchor="middle" fill="#333">PaymentService</text>
+
+  <rect x="590" y="190" width="130" height="34" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="655" y="212" text-anchor="middle" fill="#333">ProductService</text>
+
+  <rect x="510" y="250" width="140" height="34" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="580" y="272" text-anchor="middle" fill="#333">UserRepository</text>
+
+  <!-- Container -> Beans arrows -->
+  <line x1="520" y1="100" x2="505" y2="140" stroke="#4caf50" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <line x1="560" y1="100" x2="560" y2="140" stroke="#4caf50" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <line x1="600" y1="100" x2="655" y2="140" stroke="#4caf50" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <line x1="600" y1="100" x2="655" y2="190" stroke="#4caf50" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <line x1="560" y1="100" x2="505" y2="190" stroke="#4caf50" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <line x1="560" y1="100" x2="580" y2="250" stroke="#4caf50" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <text x="530" y="125" font-size="11" fill="#4caf50">注入</text>
+
+  <!-- Bottom note -->
+  <text x="200" y="390" text-anchor="middle" font-size="12" fill="#999">每个对象自己创建依赖 → 耦合严重</text>
+  <text x="600" y="330" text-anchor="middle" font-size="12" fill="#4caf50">容器统一管理 → 解耦清晰</text>
+</svg>

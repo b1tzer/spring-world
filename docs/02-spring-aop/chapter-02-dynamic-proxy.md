@@ -84,22 +84,7 @@ proxy.createOrder(1L, items);
 
 这就是 AOP "不改原代码"的秘密：**你以为你在调用目标对象，其实你调的是一个代理对象。代理对象在中间拦截了调用，在转发给真实对象之前和之后，塞了额外的逻辑。**
 
-```mermaid
-sequenceDiagram
-    participant C as 调用方
-    participant P as 代理对象
-    participant H as InvocationHandler
-    participant T as 目标对象
-
-    C->>P: proxy.createOrder(userId, items)
-    P->>H: invoke(proxy, method, args)
-    H->>H: 前置逻辑（日志、权限...）
-    H->>T: method.invoke(target, args)
-    T-->>H: 返回结果
-    H->>H: 后置逻辑（耗时统计...）
-    H-->>P: 返回结果
-    P-->>C: 返回结果
-```
+![JDK 动态代理调用流程](/diagrams/2-2-proxy-call-flow.svg)
 
 但 JDK 动态代理有一个硬性限制：**目标对象必须实现接口**。因为 `Proxy.newProxyInstance()` 的第二个参数就是接口数组，它是在运行时动态生成一个实现了相同接口的代理类。没有接口，它就造不出来。
 

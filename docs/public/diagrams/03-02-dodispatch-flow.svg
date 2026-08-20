@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 820" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow3" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">doDispatch 完整请求处理流程</text>
+
+  <!-- A: HTTP 请求进入 -->
+  <rect x="300" y="50" width="200" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="73" text-anchor="middle" fill="#333">HTTP 请求进入</text>
+
+  <!-- Arrow -->
+  <line x1="400" y1="86" x2="400" y2="106" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- B: doDispatch -->
+  <rect x="300" y="110" width="200" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="133" text-anchor="middle" fill="#333">DispatcherServlet.doDispatch</text>
+
+  <line x1="400" y1="146" x2="400" y2="166" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- C: checkMultipart -->
+  <rect x="300" y="170" width="200" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="193" text-anchor="middle" fill="#333">checkMultipart 检查文件上传</text>
+
+  <line x1="400" y1="206" x2="400" y2="226" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- D: getHandler -->
+  <rect x="300" y="230" width="200" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="253" text-anchor="middle" fill="#333">getHandler 查找处理器</text>
+
+  <line x1="400" y1="266" x2="400" y2="286" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- E: 找到了吗? -->
+  <polygon points="400,290 500,320 400,350 300,320" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="325" text-anchor="middle" fill="#333">找到了吗?</text>
+
+  <!-- E -> F (否, 左) -->
+  <line x1="300" y1="320" x2="160" y2="320" stroke="#666" marker-end="url(#arrow3)"/>
+  <text x="230" y="313" text-anchor="middle" fill="#333">否</text>
+  <rect x="60" y="302" width="100" height="36" rx="6" fill="#ffebee" stroke="#ef9a9a"/>
+  <text x="110" y="325" text-anchor="middle" fill="#333">返回 404</text>
+
+  <!-- E -> G (是, 下) -->
+  <line x1="400" y1="350" x2="400" y2="370" stroke="#666" marker-end="url(#arrow3)"/>
+  <text x="415" y="363" fill="#333">是</text>
+
+  <!-- G: getHandlerAdapter -->
+  <rect x="300" y="374" width="200" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="397" text-anchor="middle" fill="#333">getHandlerAdapter 查找适配器</text>
+
+  <line x1="400" y1="410" x2="400" y2="430" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- H: 拦截器 preHandle -->
+  <rect x="300" y="434" width="200" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="400" y="457" text-anchor="middle" fill="#333">拦截器 preHandle</text>
+
+  <line x1="400" y1="470" x2="400" y2="490" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- I: preHandle 放行? -->
+  <polygon points="400,494 500,524 400,554 300,524" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="529" text-anchor="middle" fill="#333">preHandle 放行?</text>
+
+  <!-- I -> J (否, 左) -->
+  <line x1="300" y1="524" x2="160" y2="524" stroke="#666" marker-end="url(#arrow3)"/>
+  <text x="230" y="517" text-anchor="middle" fill="#333">否</text>
+  <rect x="40" y="506" width="120" height="36" rx="6" fill="#ffebee" stroke="#ef9a9a"/>
+  <text x="100" y="529" text-anchor="middle" fill="#333">拦截器已处理响应</text>
+
+  <!-- I -> K (是, 下) -->
+  <line x1="400" y1="554" x2="400" y2="574" stroke="#666" marker-end="url(#arrow3)"/>
+  <text x="415" y="567" fill="#333">是</text>
+
+  <!-- K: HandlerAdapter.handle -->
+  <rect x="275" y="578" width="250" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="400" y="601" text-anchor="middle" fill="#333">HandlerAdapter.handle 执行 Controller</text>
+
+  <line x1="400" y1="614" x2="400" y2="634" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- L: 拦截器 postHandle -->
+  <rect x="300" y="638" width="200" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="400" y="661" text-anchor="middle" fill="#333">拦截器 postHandle</text>
+
+  <line x1="400" y1="674" x2="400" y2="694" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- M: processDispatchResult -->
+  <rect x="275" y="698" width="250" height="36" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="400" y="721" text-anchor="middle" fill="#333">processDispatchResult</text>
+
+  <line x1="400" y1="734" x2="400" y2="754" stroke="#666" marker-end="url(#arrow3)"/>
+
+  <!-- N: 有 ModelAndView? -->
+  <polygon points="400,758 520,788 400,818 280,788" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="400" y="783" text-anchor="middle" fill="#333" font-size="12">有 ModelAndView 且有 View?</text>
+
+  <!-- N -> O (是, 右) -->
+  <line x1="520" y1="788" x2="620" y2="788" stroke="#666" marker-end="url(#arrow3)"/>
+  <text x="570" y="781" text-anchor="middle" fill="#333">是</text>
+  <rect x="624" y="770" width="150" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="699" y="793" text-anchor="middle" fill="#333">ViewResolver → View.render</text>
+
+  <!-- N -> R (否, 左) -->
+  <line x1="280" y1="788" x2="160" y2="788" stroke="#666" marker-end="url(#arrow3)"/>
+  <text x="220" y="781" text-anchor="middle" fill="#333">否</text>
+  <rect x="30" y="770" width="130" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="95" y="793" text-anchor="middle" fill="#333">直接写响应体</text>
+</svg>

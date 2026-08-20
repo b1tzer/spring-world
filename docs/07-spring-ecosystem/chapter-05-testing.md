@@ -6,16 +6,7 @@ Spring 应用的测试有个尴尬的问题：你的代码跑在 Spring 容器�
 
 Spring 的测试体系就是在这两个极端之间找平衡：**用最小的上下文覆盖最多的场景**。
 
-```mermaid
-graph TD
-    A[测试金字塔] --> B[单元测试 - 快、多、不需要 Spring]
-    A --> C[集成测试 - 中等速度、验证组件协作]
-    A --> D[端到端测试 - 慢、少、验证完整流程]
-
-    B --> E["@Mock + @InjectMocks"]
-    C --> F["@SpringBootTest + Testcontainers"]
-    D --> G["真实环境部署验证"]
-```
+![Spring 测试金字塔](/diagrams/07-05-test-pyramid.svg)
 
 这一章聚焦第二层：怎么用 Spring 的测试工具高效地写集成测试。
 

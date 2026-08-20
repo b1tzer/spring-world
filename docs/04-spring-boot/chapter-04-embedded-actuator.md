@@ -262,21 +262,7 @@ spring:
 4. 30 秒后还有请求没处理完？强制关闭。
 5. 销毁 Spring 容器。
 
-```mermaid
-sequenceDiagram
-    participant K8s as Kubernetes
-    participant App as Spring Boot App
-    participant Client as 客户端
-    
-    K8s->>App: SIGTERM
-    App->>App: 停止接受新请求
-    Client->>App: 新请求（被拒绝）
-    App-->>Client: 503 Service Unavailable
-    Note over App: 已有请求继续处理
-    App->>App: 等待最多 30s
-    App->>App: 销毁容器
-    App->>K8s: 进程退出
-```
+![优雅关闭时序图](/diagrams/04-04-graceful-shutdown.svg)
 
 在 Kubernetes 环境里，这和 Pod 的 `terminationGracePeriodSeconds` 配合使用：
 

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <style>text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; fill: #333; }</style>
+  <!-- Eureka Server 1 -->
+  <rect x="250" y="30" width="150" height="50" rx="6" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="325" y="60" text-anchor="middle">Eureka Server 1</text>
+  <!-- Eureka Server 2 -->
+  <rect x="450" y="30" width="150" height="50" rx="6" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="525" y="60" text-anchor="middle">Eureka Server 2</text>
+  <!-- 互相复制 -->
+  <line x1="400" y1="45" x2="450" y2="45" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="450" y1="65" x2="400" y2="65" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="425" y="28" text-anchor="middle" font-size="11" fill="#666">互相复制</text>
+  <!-- 服务A 实例1 -->
+  <rect x="150" y="140" width="140" height="50" rx="6" fill="#e8f5e9" stroke="#81c784" stroke-width="1.5"/>
+  <text x="220" y="170" text-anchor="middle">服务A 实例1</text>
+  <!-- 服务A 实例2 -->
+  <rect x="530" y="140" width="140" height="50" rx="6" fill="#e8f5e9" stroke="#81c784" stroke-width="1.5"/>
+  <text x="600" y="170" text-anchor="middle">服务A 实例2</text>
+  <!-- 服务B -->
+  <rect x="340" y="220" width="130" height="50" rx="6" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="405" y="250" text-anchor="middle">服务B</text>
+  <!-- 注册+心跳 -->
+  <line x1="260" y1="140" x2="300" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="250" y="120" font-size="11" fill="#666">注册+心跳</text>
+  <line x1="560" y1="140" x2="510" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="570" y="120" font-size="11" fill="#666">注册+心跳</text>
+  <!-- 拉取注册表 -->
+  <line x1="370" y1="220" x2="340" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="330" y="170" font-size="11" fill="#666">拉取注册表</text>
+  <!-- 缓存 -->
+  <path d="M 470 245 Q 520 260 470 270" stroke="#666" stroke-width="1" fill="none" stroke-dasharray="3,2"/>
+  <text x="510" y="265" font-size="10" fill="#666">E1挂了？用缓存</text>
+</svg>

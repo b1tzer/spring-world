@@ -219,16 +219,7 @@ public class AppProperties {
 
 整个绑定流程：
 
-```mermaid
-graph LR
-    A["application.yml"] --> B["Spring Boot 启动"]
-    B --> C["扫描 @ConfigurationProperties"]
-    C --> D["前缀匹配: app.*"]
-    D --> E["类型转换 + 绑定"]
-    E --> F["JSR-303 校验"]
-    F --> G["注入到 Bean"]
-    G --> H["代码中直接调用 getter"]
-```
+![配置绑定流程](/diagrams/04-03-config-bind.svg)
 
 ## 配置加密：密码不能明文
 
@@ -328,17 +319,6 @@ spring:
 
 最后用一张图把整个配置体系串起来：
 
-```mermaid
-graph TD
-    A["Spring Boot 启动"] --> B["创建 Environment"]
-    B --> C["加载 application.yml"]
-    C --> D["加载 application-{profile}.yml"]
-    D --> E["加载系统属性 / 环境变量"]
-    E --> F["加载命令行参数"]
-    F --> G["合并所有配置源（按优先级覆盖）"]
-    G --> H["@ConfigurationProperties 绑定"]
-    H --> I["JSR-303 校验"]
-    I --> J["Bean 可用"]
-```
+![配置加载完整流程](/diagrams/04-03-config-sources.svg)
 
 **配置体系的本质就是一个多源的 PropertySource 合并机制。** 理解了优先级规则和绑定方式，你就能灵活应对各种配置场景——也能在配置"不生效"的时候，快速定位是哪个环节出了问题。

@@ -340,15 +340,6 @@ Spring Boot + Micrometer Tracing（替代了原来的 Spring Cloud Sleuth）自�
 
 加了这个依赖，日志里自动出现 `trace_id` 和 `span_id`，配合 LogstashEncoder 输出到 JSON，就能在 Kibana 里实现跨服务的日志关联查询。
 
-```mermaid
-graph LR
-    A["用户请求"] --> B["网关 (trace_id=abc123)"]
-    B --> C["订单服务 (trace_id=abc123)"]
-    C --> D["库存服务 (trace_id=abc123)"]
-    C --> E["支付服务 (trace_id=abc123)"]
-    
-    F["Kibana"] --> G["搜索 trace_id=abc123"]
-    G --> H["看到完整调用链日志"]
-```
+![分布式链路追踪](/diagrams/04-05-trace-id.svg)
 
 **生产环境的日志管理不是"配个文件就行"的事情。** 结构化日志 + 集中式收集 + 链路追踪，三件套缺一不可。否则服务一多，出了问题你连日志都找不到。

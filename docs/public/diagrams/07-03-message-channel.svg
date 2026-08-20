@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Spring Integration 消息通道模型</text>
+
+  <!-- 订单服务 -->
+  <rect x="30" y="70" width="120" height="50" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="2"/>
+  <text x="90" y="100" text-anchor="middle" font-size="14" fill="#333">订单服务</text>
+
+  <!-- Arrow to Channel -->
+  <line x1="150" y1="95" x2="218" y2="95" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="185" y="88" text-anchor="middle" font-size="11" fill="#666">Message</text>
+
+  <!-- Channel -->
+  <rect x="220" y="60" width="120" height="70" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="2"/>
+  <text x="280" y="100" text-anchor="middle" font-size="14" fill="#333">Channel</text>
+
+  <!-- Arrows from Channel to endpoints -->
+  <line x1="340" y1="75" x2="408" y2="50" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="340" y1="85" x2="408" y2="95" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="340" y1="105" x2="408" y2="140" stroke="#666" marker-end="url(#arrow)"/>
+  <line x1="340" y1="115" x2="408" y2="175" stroke="#666" marker-end="url(#arrow)"/>
+
+  <!-- Endpoints -->
+  <rect x="410" y="30" width="120" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="470" y="55" text-anchor="middle" font-size="13" fill="#333">库存端点</text>
+
+  <rect x="410" y="80" width="120" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="470" y="105" text-anchor="middle" font-size="13" fill="#333">物流端点</text>
+
+  <rect x="410" y="130" width="120" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="470" y="155" text-anchor="middle" font-size="13" fill="#333">通知端点</text>
+
+  <!-- More endpoints -->
+  <rect x="570" y="30" width="120" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="630" y="55" text-anchor="middle" font-size="13" fill="#333">数仓端点</text>
+
+  <line x1="530" y1="50" x2="568" y2="50" stroke="#666" marker-end="url(#arrow)" stroke-dasharray="4,4"/>
+
+  <!-- Label -->
+  <text x="280" y="155" text-anchor="middle" font-size="12" fill="#999">发布订阅模式</text>
+  <text x="280" y="170" text-anchor="middle" font-size="12" fill="#999">一条消息，多个消费者</text>
+</svg>

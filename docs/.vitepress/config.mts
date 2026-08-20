@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import { withMermaid } from 'vitepress-plugin-mermaid'
+
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { openInEditor } from 'vitepress-plugin-open-in-editor'
@@ -15,8 +15,7 @@ const editorIntegration = openInEditor({
   buttonText: '编辑此行',
 })
 
-export default withMermaid(
-  defineConfig({
+export default defineConfig({
   title: 'Spring World',
   description: 'Spring 生态完整知识体系',
   lang: 'zh-CN',
@@ -182,13 +181,7 @@ export default withMermaid(
     },
   },
 
-  mermaid: {
-    flowchart: {
-      padding: 24,
-    },
-  },
-
   vite: {
     plugins: [editorIntegration.vite()],
   },
-}))
+})

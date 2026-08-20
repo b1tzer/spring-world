@@ -97,31 +97,7 @@ public interface UserMapper {
 
 `@MapperScan` 和 `@Mapper` 的区别：`@Mapper` 标注单个接口，`@MapperScan` 批量扫描整个包。实际项目中用 `@MapperScan` 更方便——新写一个 Mapper 接口不需要额外加注解。
 
-```mermaid
-graph TB
-    subgraph "Spring 容器"
-        SSF[SqlSessionFactory]
-        SM[SqlSessionTemplate]
-        MP1[UserMapper 代理]
-        MP2[OrderMapper 代理]
-    end
-
-    subgraph "配置"
-        MS[@MapperScan]
-        DS[DataSource]
-    end
-
-    MS -->|扫描接口| MP1
-    MS -->|扫描接口| MP2
-    DS --> SSF
-    SSF --> SM
-    SM --> MP1
-    SM --> MP2
-
-    MP1 -->|执行| SM
-    MP2 -->|执行| SM
-    SM -->|委托| SSF
-```
+![Spring 整合 MyBatis 架构](/diagrams/05-03-mybatis-spring.svg)
 
 ## SqlSession 的管理：Spring 帮你做了什么
 

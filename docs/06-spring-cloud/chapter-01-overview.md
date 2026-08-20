@@ -37,17 +37,7 @@ Martin Fowler 说过一句话很经典：**"Almost all the successful microservi
 
 拆服务不是一蹴而就的。推荐的路径是：
 
-```mermaid
-graph LR
-    A[单体应用] --> B[模块化单体]
-    B --> C[垂直拆分]
-    C --> D[微服务架构]
-    
-    style A fill:#e8f5e9
-    style B fill:#fff3e0
-    style C fill:#fff3e0
-    style D fill:#e3f2fd
-```
+![单体到微服务的演进路径](/diagrams/06-01-monolith-to-microservice.svg)
 
 **第一步：模块化单体。** 在单体内部先按业务域划分模块，模块之间通过接口调用，不直接访问对方的数据库。这一步不需要引入任何分布式组件，但能让后续拆分变得容易。
 
@@ -142,18 +132,7 @@ Spring Cloud Alibaba 是阿里巴巴开源的一套增强方案，核心组件�
 
 我的看法：
 
-```mermaid
-graph TD
-    A[你的场景是什么？] --> B{团队偏好？}
-    B -->|追求稳定/国际化| C[Spring Cloud 原生]
-    B -->|国内团队/快速落地| D[Spring Cloud Alibaba]
-    
-    C --> E[Eureka + Config + Gateway + Resilience4j]
-    D --> F[Nacos + Sentinel + Gateway + Seata]
-    
-    style C fill:#e3f2fd
-    style D fill:#fff3e0
-```
+![技术选型决策](/diagrams/06-01-tech-selection.svg)
 
 **不要纠结太久。** 两套方案的核心理念是一样的，区别在于具体实现。你理解了微服务的原理，换一套组件也就是换几个依赖的事。
 

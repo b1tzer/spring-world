@@ -8,21 +8,7 @@
 
 Bean 的生命周期像人的一生。这个类比不是随便说说——贯穿整章，你会发现每一步都能对应上。
 
-```mermaid
-graph TD
-    A["🏥 出生（实例化）<br/>BeanDefinition → new"] --> B["📋 上户口（属性填充）<br/>注入依赖"]
-    B --> C["🏫 上学（Aware 接口）<br/>感知容器环境"]
-    C --> D["🎓 入职培训（BeanPostProcessor#before）<br/>最后的准备"]
-    D --> E["💼 @PostConstruct<br/>正式上岗"]
-    E --> F["💼 afterPropertiesSet<br/>熟悉业务"]
-    F --> G["💼 自定义 init-method<br/>独门绝活"]
-    G --> H["🏢 BeanPostProcessor#after<br/>可能被包装/代理"]
-    H --> I["🟢 正式工作<br/>Bean 可用"]
-    I --> J["🏖️ @PreDestroy<br/>开始交接"]
-    J --> K["🏖️ DisposableBean#destroy<br/>清理资源"]
-    K --> L["🏖️ 自定义 destroy-method<br/>最后的告别"]
-    L --> M["💀 销毁"]
-```
+![Bean 生命周期全览](/diagrams/2-1-bean-lifecycle.svg)
 
 这张图就是全章的"地图"。下面我们一步步走。
 
@@ -138,22 +124,7 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
 - **`@Autowired` 处理**：`AutowiredAnnotationBeanPostProcessor` 负责解析和注入依赖
 - **`@Value` 处理**：`CommonAnnotationBeanPostProcessor` 负责解析 `@Value` 和 `@Resource`
 
-```mermaid
-sequenceDiagram
-    participant S as Spring
-    participant BP as BeanPostProcessor
-    participant B as 原始 Bean
-    participant P as 代理 Bean
-
-    S->>B: 实例化 + 属性填充
-    S->>BP: postProcessBeforeInitialization
-    BP-->>S: 返回原始 Bean
-    S->>B: @PostConstruct / afterPropertiesSet
-    S->>BP: postProcessAfterInitialization
-    BP->>P: 需要代理？创建代理对象
-    BP-->>S: 返回代理 Bean（替换原始）
-    Note over S: 容器里存的是代理版
-```
+![BeanPostProcessor 代理创建流程](/diagrams/2-2-beanpostprocessor.svg)
 
 这就是为什么你在 `@PostConstruct` 里拿到的 `this` 是原始对象，但注入时拿到的是代理对象——代理是在 `@PostConstruct` 之后才创建的。
 

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 180">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <style>text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; fill: #333; }</style>
+  <!-- Git 仓库 -->
+  <rect x="30" y="60" width="140" height="60" rx="6" fill="#e8f5e9" stroke="#81c784" stroke-width="1.5"/>
+  <text x="100" y="95" text-anchor="middle">Git 仓库</text>
+  <!-- Config Server -->
+  <rect x="300" y="60" width="150" height="60" rx="6" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="375" y="95" text-anchor="middle">Config Server</text>
+  <!-- 服务实例 -->
+  <rect x="580" y="60" width="140" height="60" rx="6" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="650" y="95" text-anchor="middle">服务实例</text>
+  <!-- 箭头 -->
+  <line x1="170" y1="80" x2="300" y2="80" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="235" y="73" text-anchor="middle" font-size="11" fill="#666">拉取配置</text>
+  <line x1="450" y1="90" x2="580" y2="90" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="515" y="83" text-anchor="middle" font-size="11" fill="#666">提供配置</text>
+  <!-- Webhook 虚线 -->
+  <line x1="650" y1="120" x2="450" y2="120" stroke="#666" stroke-width="1" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="550" y="138" text-anchor="middle" font-size="11" fill="#666">Webhook 通知变更</text>
+</svg>

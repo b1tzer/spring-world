@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <rect x="10" y="60" width="140" height="45" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="80" y="88" text-anchor="middle" fill="#333" font-size="14">application.yml</text>
+  <line x1="150" y1="82" x2="170" y2="82" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="170" y="60" width="160" height="45" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="250" y="88" text-anchor="middle" fill="#333" font-size="14">Spring Boot 启动</text>
+  <line x1="330" y1="82" x2="350" y2="82" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="350" y="60" width="210" height="45" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="455" y="88" text-anchor="middle" fill="#333" font-size="14">扫描 @ConfigurationProperties</text>
+  <line x1="560" y1="82" x2="580" y2="82" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="580" y="60" width="200" height="45" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="680" y="88" text-anchor="middle" fill="#333" font-size="14">前缀匹配: app.*</text>
+  <!-- Second row -->
+  <line x1="680" y1="105" x2="680" y2="130" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="560" y="130" width="240" height="45" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="680" y="158" text-anchor="middle" fill="#333" font-size="14">类型转换 + 绑定</text>
+  <line x1="560" y1="152" x2="530" y2="152" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="330" y="130" width="200" height="45" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="430" y="158" text-anchor="middle" fill="#333" font-size="14">JSR-303 校验</text>
+  <line x1="330" y1="152" x2="300" y2="152" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="140" y="130" width="160" height="45" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="220" y="158" text-anchor="middle" fill="#333" font-size="14">注入到 Bean</text>
+  <line x1="140" y1="152" x2="110" y2="152" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="10" y="130" width="100" height="45" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="60" y="158" text-anchor="middle" fill="#333" font-size="13">getter 调用</text>
+</svg>

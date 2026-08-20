@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Spring Security 认证流程</text>
+
+  <!-- Participants -->
+  <rect x="30" y="50" width="100" height="40" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="80" y="75" text-anchor="middle" font-size="14" fill="#333">客户端</text>
+
+  <rect x="190" y="50" width="140" height="40" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="260" y="75" text-anchor="middle" font-size="14" fill="#333">SecurityFilterChain</text>
+
+  <rect x="390" y="50" width="140" height="40" rx="6" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="460" y="75" text-anchor="middle" font-size="14" fill="#333">AuthenticationManager</text>
+
+  <rect x="590" y="50" width="140" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="660" y="75" text-anchor="middle" font-size="14" fill="#333">UserDetailsService</text>
+
+  <!-- Lifelines -->
+  <line x1="80" y1="90" x2="80" y2="490" stroke="#999" stroke-dasharray="4,4"/>
+  <line x1="260" y1="90" x2="260" y2="490" stroke="#999" stroke-dasharray="4,4"/>
+  <line x1="460" y1="90" x2="460" y2="490" stroke="#999" stroke-dasharray="4,4"/>
+  <line x1="660" y1="90" x2="660" y2="490" stroke="#999" stroke-dasharray="4,4"/>
+
+  <!-- DB participant at bottom area -->
+  <rect x="610" y="200" width="100" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="660" y="225" text-anchor="middle" font-size="14" fill="#333">数据库</text>
+
+  <!-- Message 1: 客户端 → SecurityFilterChain -->
+  <line x1="80" y1="120" x2="250" y2="120" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="165" y="115" text-anchor="middle" font-size="12" fill="#333">请求 /api/users (携带凭证)</text>
+
+  <!-- Message 2: SecurityFilterChain → AuthenticationManager -->
+  <line x1="260" y1="150" x2="450" y2="150" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="355" y="145" text-anchor="middle" font-size="12" fill="#333">提交 Authentication 对象</text>
+
+  <!-- Message 3: AuthenticationManager → UserDetailsService -->
+  <line x1="460" y1="180" x2="650" y2="180" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="555" y="175" text-anchor="middle" font-size="12" fill="#333">loadUserByUsername()</text>
+
+  <!-- Message 4: UserDetailsService → DB -->
+  <line x1="660" y1="210" x2="710" y2="210" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="685" y="250" text-anchor="middle" font-size="12" fill="#333" transform="rotate(-90, 685, 250)">查询用户</text>
+
+  <!-- Message 5: DB → UserDetailsService -->
+  <line x1="660" y1="270" x2="660" y2="290" stroke="#666" marker-end="url(#arrow)" stroke-dasharray="4,4"/>
+  <text x="720" y="285" font-size="12" fill="#333">User(密码哈希, 角色)</text>
+
+  <!-- Message 6: UserDetailsService → AuthenticationManager -->
+  <line x1="650" y1="310" x2="470" y2="310" stroke="#666" marker-end="url(#arrow)" stroke-dasharray="4,4"/>
+  <text x="560" y="305" text-anchor="middle" font-size="12" fill="#333">UserDetails</text>
+
+  <!-- Message 7: AuthenticationManager self -->
+  <rect x="440" y="330" width="40" height="25" fill="none" stroke="#666"/>
+  <line x1="480" y1="330" x2="480" y2="355" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="490" y="347" font-size="12" fill="#333">密码比对</text>
+
+  <!-- Message 8: AuthenticationManager → SecurityFilterChain -->
+  <line x1="450" y1="375" x2="270" y2="375" stroke="#666" marker-end="url(#arrow)" stroke-dasharray="4,4"/>
+  <text x="360" y="370" text-anchor="middle" font-size="12" fill="#333">认证成功，返回完整 Authentication</text>
+
+  <!-- Message 9: SecurityFilterChain self -->
+  <rect x="240" y="395" width="40" height="25" fill="none" stroke="#666"/>
+  <line x1="280" y1="395" x2="280" y2="420" stroke="#666" marker-end="url(#arrow)"/>
+  <text x="290" y="412" font-size="12" fill="#333">检查授权（角色/权限）</text>
+
+  <!-- Message 10: SecurityFilterChain → 客户端 -->
+  <line x1="250" y1="445" x2="90" y2="445" stroke="#666" marker-end="url(#arrow)" stroke-dasharray="4,4"/>
+  <text x="170" y="440" text-anchor="middle" font-size="12" fill="#333">200 OK 或 403 Forbidden</text>
+
+  <!-- Note -->
+  <rect x="100" y="470" width="260" height="30" rx="6" fill="#fff8e1" stroke="#ffe082"/>
+  <text x="230" y="490" text-anchor="middle" font-size="12" fill="#666">认证 ≠ 授权：认证通过不代表能访问资源</text>
+</svg>

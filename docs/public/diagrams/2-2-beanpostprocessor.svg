@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13">
+  <defs>
+    <marker id="bp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#666"/></marker>
+    <marker id="bps" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto"><path d="M8,0 L0,3 L8,6" fill="#666"/></marker>
+  </defs>
+
+  <text x="400" y="22" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">BeanPostProcessor 代理创建流程</text>
+
+  <!-- Participants -->
+  <rect x="50" y="40" width="80" height="36" rx="6" fill="#bbdefb" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="90" y="63" text-anchor="middle" font-weight="bold" fill="#333">Spring</text>
+  <line x1="90" y1="76" x2="90" y2="420" stroke="#90caf9" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <rect x="240" y="40" width="120" height="36" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="300" y="63" text-anchor="middle" font-weight="bold" fill="#333">BeanPostProcessor</text>
+  <line x1="300" y1="76" x2="300" y2="420" stroke="#ffcc80" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <rect x="460" y="40" width="100" height="36" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="510" y="63" text-anchor="middle" font-weight="bold" fill="#333">原始 Bean</text>
+  <line x1="510" y1="76" x2="510" y2="420" stroke="#a5d6a7" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <rect x="650" y="40" width="100" height="36" rx="6" fill="#f3e5f5" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="700" y="63" text-anchor="middle" font-weight="bold" fill="#333">代理 Bean</text>
+  <line x1="700" y1="76" x2="700" y2="420" stroke="#ce93d8" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Step 1 -->
+  <line x1="90" y1="105" x2="500" y2="105" stroke="#666" stroke-width="1.5" marker-end="url(#bp)"/>
+  <text x="300" y="100" text-anchor="middle" fill="#333">1. 实例化 + 属性填充</text>
+
+  <!-- Step 2 -->
+  <line x1="90" y1="140" x2="290" y2="140" stroke="#666" stroke-width="1.5" marker-end="url(#bp)"/>
+  <text x="195" y="135" text-anchor="middle" fill="#333">2. postProcessBeforeInitialization</text>
+
+  <!-- Step 3 -->
+  <line x1="290" y1="170" x2="100" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#bps)"/>
+  <text x="195" y="165" text-anchor="middle" fill="#333">3. 返回原始 Bean</text>
+
+  <!-- Step 4 -->
+  <line x1="90" y1="205" x2="500" y2="205" stroke="#666" stroke-width="1.5" marker-end="url(#bp)"/>
+  <text x="300" y="200" text-anchor="middle" fill="#333">4. @PostConstruct / afterPropertiesSet</text>
+
+  <!-- Step 5 -->
+  <line x1="90" y1="245" x2="290" y2="245" stroke="#666" stroke-width="1.5" marker-end="url(#bp)"/>
+  <text x="195" y="240" text-anchor="middle" fill="#333">5. postProcessAfterInitialization</text>
+
+  <!-- Step 6 - need proxy? -->
+  <rect x="320" y="270" width="180" height="40" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1"/>
+  <text x="410" y="285" text-anchor="middle" font-size="12" fill="#333">需要代理？</text>
+  <text x="410" y="300" text-anchor="middle" font-size="11" fill="#999">（@Transactional / @Async）</text>
+
+  <!-- Yes -> create proxy -->
+  <line x1="500" y1="290" x2="690" y2="290" stroke="#4caf50" stroke-width="1.5" marker-end="url(#bp)"/>
+  <text x="595" y="285" text-anchor="middle" font-size="12" fill="#4caf50">6. 创建代理对象</text>
+
+  <!-- Return proxy -->
+  <line x1="690" y1="320" x2="100" y2="320" stroke="#666" stroke-width="1.5" marker-end="url(#bps)"/>
+  <text x="400" y="315" text-anchor="middle" fill="#333">7. 返回代理 Bean（替换原始）</text>
+
+  <!-- Note -->
+  <rect x="200" y="350" width="400" height="55" rx="6" fill="#fff8e1" stroke="#e0c36a" stroke-width="1"/>
+  <text x="400" y="372" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">容器里存的是代理版 Bean</text>
+  <text x="400" y="392" text-anchor="middle" font-size="12" fill="#666">@PostConstruct 里 this = 原始对象，注入时 = 代理对象</text>
+</svg>

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 680" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="bl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#666"/></marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Bean 生命周期全览</text>
+
+  <!-- Phase 1: 出生 -->
+  <rect x="250" y="50" width="300" height="40" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="400" y="75" text-anchor="middle" fill="#333">🏥 出生（实例化）BeanDefinition → new</text>
+  <line x1="400" y1="90" x2="400" y2="110" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 2: 上户口 -->
+  <rect x="250" y="110" width="300" height="40" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="400" y="135" text-anchor="middle" fill="#333">📋 上户口（属性填充）注入依赖</text>
+  <line x1="400" y1="150" x2="400" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 3: 上学 -->
+  <rect x="250" y="170" width="300" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="400" y="195" text-anchor="middle" fill="#333">🏫 上学（Aware 接口）感知容器环境</text>
+  <line x1="400" y1="210" x2="400" y2="230" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 4: 入职培训 before -->
+  <rect x="250" y="230" width="300" height="40" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="400" y="255" text-anchor="middle" fill="#333">🎓 BeanPostProcessor#before</text>
+  <line x1="400" y1="270" x2="400" y2="290" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 5: @PostConstruct -->
+  <rect x="250" y="290" width="300" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="400" y="315" text-anchor="middle" fill="#333">💼 @PostConstruct 正式上岗</text>
+  <line x1="400" y1="330" x2="400" y2="350" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 6: afterPropertiesSet -->
+  <rect x="250" y="350" width="300" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="400" y="375" text-anchor="middle" fill="#333">💼 afterPropertiesSet 熟悉业务</text>
+  <line x1="400" y1="390" x2="400" y2="410" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 7: init-method -->
+  <rect x="250" y="410" width="300" height="40" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="400" y="435" text-anchor="middle" fill="#333">💼 自定义 init-method 独门绝活</text>
+  <line x1="400" y1="450" x2="400" y2="470" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 8: BeanPostProcessor#after -->
+  <rect x="250" y="470" width="300" height="40" rx="6" fill="#fff3e0" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="400" y="495" text-anchor="middle" fill="#333">🏢 BeanPostProcessor#after 可能被代理</text>
+  <line x1="400" y1="510" x2="400" y2="530" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Phase 9: 可用 -->
+  <rect x="270" y="530" width="260" height="40" rx="6" fill="#c8e6c9" stroke="#66bb6a" stroke-width="2"/>
+  <text x="400" y="555" text-anchor="middle" font-weight="bold" fill="#2e7d32">🟢 正式工作（Bean 可用）</text>
+  <line x1="400" y1="570" x2="400" y2="590" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <!-- Destroy phases -->
+  <rect x="250" y="590" width="300" height="34" rx="6" fill="#ffcdd2" stroke="#ef9a9a" stroke-width="1"/>
+  <text x="400" y="612" text-anchor="middle" fill="#333">🏖️ @PreDestroy → DisposableBean#destroy</text>
+  <line x1="400" y1="624" x2="400" y2="640" stroke="#666" stroke-width="1.5" marker-end="url(#bl)"/>
+
+  <rect x="300" y="640" width="200" height="30" rx="6" fill="#ffcdd2" stroke="#ef9a9a" stroke-width="1"/>
+  <text x="400" y="660" text-anchor="middle" fill="#c62828">💀 销毁</text>
+
+  <!-- Left annotations -->
+  <rect x="20" y="50" width="200" height="28" rx="4" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+  <text x="120" y="69" text-anchor="middle" font-size="12" fill="#666">Spring 决定用哪个构造函数</text>
+
+  <rect x="580" y="110" width="200" height="28" rx="4" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+  <text x="680" y="129" text-anchor="middle" font-size="12" fill="#666">@Autowired / @Resource / @Value</text>
+
+  <rect x="580" y="170" width="200" height="28" rx="4" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+  <text x="680" y="189" text-anchor="middle" font-size="12" fill="#666">BeanNameAware 等</text>
+
+  <rect x="580" y="290" width="200" height="28" rx="4" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+  <text x="680" y="309" text-anchor="middle" font-size="12" fill="#666">执行顺序：①→②→③</text>
+
+  <rect x="580" y="470" width="200" height="28" rx="4" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+  <text x="680" y="489" text-anchor="middle" font-size="12" fill="#666">AOP 代理在此创建</text>
+
+  <rect x="20" y="590" width="200" height="28" rx="4" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+  <text x="120" y="609" text-anchor="middle" font-size="12" fill="#666">仅容器正常关闭时执行</text>
+</svg>

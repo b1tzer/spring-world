@@ -20,19 +20,7 @@
 
 软件熔断器的工作原理完全一样：
 
-```mermaid
-stateDiagram-v2
-    [*] --> Closed: 初始状态
-    
-    Closed --> Open: 失败率超过阈值
-    Closed --> Closed: 调用成功
-    
-    Open --> HalfOpen: 等待时间到
-    Open --> Open: 拒绝所有请求
-    
-    HalfOpen --> Closed: 探测请求成功
-    HalfOpen --> Open: 探测请求失败
-```
+![熔断器状态转换](/diagrams/06-06-circuit-breaker-states.svg)
 
 **关闭状态（Closed）：** 正常放行所有请求。但会记录失败次数，如果失败率超过阈值（比如 50%），切换到打开状态。
 
@@ -372,22 +360,7 @@ Feign 调用时，`traceId` 需要在服务间传递。Micrometer Tracing + Brav
 
 把这一章的内容串起来，一个生产级的微服务容错方案通常是这样的：
 
-```mermaid
-graph TD
-    A[客户端请求] --> B[API 网关]
-    B -->|限流| B
-    B -->|路由| C[订单服务]
-    C -->|熔断| D[用户服务]
-    C -->|限流| C
-    D -->|熔断| E[数据库]
-    
-    B -.->|traceId| C
-    C -.->|traceId| D
-    
-    F[Zipkin] -.->|收集链路数据| B
-    F -.->|收集链路数据| C
-    F -.->|收集链路数据| D
-```
+![完整容错方案](/diagrams/06-06-full-fault-tolerance.svg)
 
 具体配置：
 

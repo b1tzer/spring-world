@@ -28,14 +28,7 @@ public Order createOrder(OrderRequest request) {
 
 Spring Integration 的核心模型是：**消息（Message）通过通道（Channel）在端点（Endpoint）之间流转**。
 
-```mermaid
-graph LR
-    A[订单服务] -->|Message| B[Channel]
-    B --> C[库存端点]
-    B --> D[物流端点]
-    B --> E[通知端点]
-    B --> F[数仓端点]
-```
+![Spring Integration 消息通道模型](/diagrams/07-03-message-channel.svg)
 
 用 Spring Integration 实现上面的场景：
 
@@ -202,17 +195,7 @@ public OrderResult aggregate(List<ItemResult> results) {
 
 这几个模式组合起来，就能构建出复杂的集成流程：
 
-```mermaid
-graph LR
-    A[原始订单] --> B[Filter: 过滤无效订单]
-    B --> C[Transformer: 格式转换]
-    C --> D{Router: 按金额路由}
-    D -->|大单| E[审核通道]
-    D -->|小单| F[直接处理通道]
-    F --> G[Splitter: 拆分子项]
-    G --> H[处理子项]
-    H --> I[Aggregator: 聚合结果]
-```
+![EIP 模式组合：订单处理流程](/diagrams/07-03-eip-patterns.svg)
 
 ## 与外部系统的集成
 

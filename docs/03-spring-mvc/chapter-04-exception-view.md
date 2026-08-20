@@ -211,21 +211,7 @@ public User detail(@PathVariable Long id) {
 
 ### 异常解析的完整流程
 
-```mermaid
-flowchart TD
-    A[Controller 方法抛出异常] --> B[ExceptionHandlerExceptionResolver]
-    B --> C{当前 Controller 有<br/>@ExceptionHandler?}
-    C -->|是| D[执行匹配的 Handler]
-    C -->|否| E{@ControllerAdvice 有<br/>匹配的 Handler?}
-    E -->|是| D
-    E -->|否| F[ResponseStatusExceptionResolver]
-    F --> G{异常有 @ResponseStatus?}
-    G -->|是| H[返回对应状态码]
-    G -->|否| I[DefaultHandlerExceptionResolver]
-    I --> J{是框架级异常?}
-    J -->|是| K[返回默认错误响应]
-    J -->|否| L[返回 500]
-```
+![异常解析完整流程](/diagrams/03-04-exception-resolve.svg)
 
 ### 自定义 HandlerExceptionResolver
 

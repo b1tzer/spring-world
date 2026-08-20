@@ -141,15 +141,7 @@ public class TemplateProcessor {
 
 **类比：快递地址校验。** 你填了一个地址，系统先查精确地址库（命令行参数），查不到查街道地址库（环境变量），再查不到查城市地址库（配置文件），最后用默认地址（代码默认值）。
 
-```mermaid
-graph TD
-    A["🔴 命令行参数<br/>--server.port=9090"] -->|最高优先级| B["JVM 系统属性<br/>-Dapp.port=8080"]
-    B --> C["系统环境变量<br/>DB_HOST=localhost"]
-    C --> D["application-{profile}.yml"]
-    D --> E["application.yml"]
-    E --> F["@PropertySource 注解"]
-    F --> G["🟢 代码默认值"]
-```
+![PropertySource 配置优先级](/diagrams/4-1-property-source-priority.svg)
 
 **命令行参数优先级最高**，代码里的默认值优先级最低。这意味着你可以通过命令行参数覆盖任何配置：
 
@@ -339,16 +331,7 @@ spring.profiles.group.production=proddb,prodmq,prodcache
 
 ### 配置文件的加载顺序
 
-```mermaid
-graph TD
-    A["🔴 命令行参数"] -->|1| B["SPRING_APPLICATION_JSON"]
-    B -->|2| C["Java 系统属性"]
-    C -->|3| D["OS 环境变量"]
-    D -->|4| E["application-{profile}.yml"]
-    E -->|5| F["application.yml"]
-    F -->|6| G["@PropertySource"]
-    G -->|7| H["🟢 默认属性"]
-```
+![Profile 配置文件加载顺序](/diagrams/4-2-config-loading-order.svg)
 
 同一个配置项，位置越靠前优先级越高。
 

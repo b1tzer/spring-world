@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <style>text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; fill: #333; }</style>
+  <!-- 你的场景是什么？ -->
+  <rect x="300" y="20" width="200" height="50" rx="6" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="400" y="50" text-anchor="middle">你的场景是什么？</text>
+  <!-- 团队偏好？ -->
+  <polygon points="400,90 500,130 400,170 300,130" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="400" y="135" text-anchor="middle">团队偏好？</text>
+  <!-- 追求稳定/国际化 -->
+  <rect x="100" y="200" width="180" height="50" rx="6" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="190" y="230" text-anchor="middle">追求稳定/国际化</text>
+  <!-- 国内团队/快速落地 -->
+  <rect x="520" y="200" width="180" height="50" rx="6" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="610" y="230" text-anchor="middle">国内团队/快速落地</text>
+  <!-- Spring Cloud 原生 -->
+  <rect x="30" y="280" width="200" height="35" rx="6" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="130" y="303" text-anchor="middle">Spring Cloud 原生</text>
+  <!-- Spring Cloud Alibaba -->
+  <rect x="570" y="280" width="200" height="35" rx="6" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="670" y="303" text-anchor="middle">Spring Cloud Alibaba</text>
+  <!-- 箭头 -->
+  <line x1="400" y1="70" x2="400" y2="100" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="320" y1="155" x2="190" y2="200" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="480" y1="155" x2="610" y2="200" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="190" y1="250" x2="130" y2="280" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="610" y1="250" x2="670" y2="280" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+</svg>

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow11" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">文档设计决策树 &amp; 索引选择</text>
+
+  <!-- Document design -->
+  <rect x="40" y="45" rx="6" width="370" height="280" fill="none" stroke="#90caf9" stroke-dasharray="4"/>
+  <text x="60" y="65" font-size="13" fill="#666" font-weight="bold">文档设计决策树</text>
+
+  <rect x="100" y="80" rx="6" width="200" height="35" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="200" y="102" text-anchor="middle" fill="#333">数据是否经常一起查询?</text>
+
+  <!-- Yes path -->
+  <line x1="200" y1="115" x2="200" y2="145" stroke="#666" marker-end="url(#arrow11)"/>
+  <text x="210" y="135" fill="#666" font-size="11">是</text>
+
+  <rect x="100" y="150" rx="6" width="200" height="35" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="200" y="172" text-anchor="middle" fill="#333">数据量大吗?</text>
+
+  <!-- Not large → embed -->
+  <line x1="100" y1="167" x2="50" y2="210" stroke="#666" marker-end="url(#arrow11)"/>
+  <text x="55" y="195" fill="#666" font-size="11">不大</text>
+
+  <rect x="30" y="215" rx="6" width="100" height="35" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="80" y="237" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">嵌套存储</text>
+
+  <!-- Large → mixed -->
+  <line x1="300" y1="167" x2="340" y2="210" stroke="#666" marker-end="url(#arrow11)"/>
+  <text x="330" y="195" fill="#666" font-size="11">很大</text>
+
+  <rect x="270" y="215" rx="6" width="140" height="45" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="340" y="235" text-anchor="middle" fill="#333" font-size="11">混合方案</text>
+  <text x="340" y="252" text-anchor="middle" fill="#666" font-size="10">核心字段嵌套，其余引用</text>
+
+  <!-- No → reference -->
+  <line x1="300" y1="97" x2="360" y2="97" stroke="#666" marker-end="url(#arrow11)"/>
+  <text x="335" y="90" fill="#666" font-size="11">否</text>
+
+  <rect x="300" y="80" rx="6" width="100" height="35" fill="#ffcdd2" stroke="#ef9a9a"/>
+  <text x="350" y="102" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">引用存储</text>
+
+  <!-- Index design -->
+  <rect x="450" y="45" rx="6" width="330" height="280" fill="none" stroke="#ffcc80" stroke-dasharray="4"/>
+  <text x="470" y="65" font-size="13" fill="#666" font-weight="bold">索引设计</text>
+
+  <rect x="520" y="80" rx="6" width="180" height="35" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="610" y="102" text-anchor="middle" fill="#333">看查询条件字段数量</text>
+
+  <line x1="550" y1="115" x2="490" y2="160" stroke="#666" marker-end="url(#arrow11)"/>
+  <text x="510" y="140" fill="#666" font-size="11">单字段</text>
+
+  <line x1="610" y1="115" x2="610" y2="160" stroke="#666" marker-end="url(#arrow11)"/>
+  <text x="620" y="140" fill="#666" font-size="11">多字段</text>
+
+  <line x1="680" y1="115" x2="730" y2="160" stroke="#666" marker-end="url(#arrow11)"/>
+  <text x="710" y="140" fill="#666" font-size="11">文本搜索</text>
+
+  <rect x="450" y="165" rx="6" width="100" height="40" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="500" y="185" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">@Indexed</text>
+  <text x="500" y="200" text-anchor="middle" fill="#666" font-size="10">单字段索引</text>
+
+  <rect x="560" y="165" rx="6" width="110" height="40" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="615" y="185" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">@CompoundIndex</text>
+  <text x="615" y="200" text-anchor="middle" fill="#666" font-size="10">复合索引</text>
+
+  <rect x="680" y="165" rx="6" width="90" height="40" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="725" y="185" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">@TextIndexed</text>
+  <text x="725" y="200" text-anchor="middle" fill="#666" font-size="10">全文索引</text>
+
+  <!-- Notes -->
+  <rect x="470" y="230" rx="6" width="290" height="80" fill="#f5f5f5" stroke="#ddd"/>
+  <text x="490" y="250" font-size="12" fill="#333" font-weight="bold">注意事项</text>
+  <text x="490" y="270" fill="#555" font-size="11">• 复合索引需匹配前缀字段才能命中</text>
+  <text x="490" y="288" fill="#555" font-size="11">• 索引不是越多越好，写入时需维护</text>
+  <text x="490" y="306" fill="#555" font-size="11">• auto-index-creation: true 可自动创建</text>
+</svg>
