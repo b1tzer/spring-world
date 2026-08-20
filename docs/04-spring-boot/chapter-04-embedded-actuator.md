@@ -1,3 +1,5 @@
+# 内嵌容器与 Actuator
+
 ## 4.1 内嵌容器的原理
 
 用过传统 Spring MVC 的人都知道这个流程：把项目打成 war 包，丢到 Tomcat 的 `webapps` 目录下，启动 Tomcat。Tomcat 是一个独立安装的 Web 服务器，你的应用只是它里面的一个"租户"。

@@ -1,3 +1,5 @@
+# 自动配置原理
+
 ## 1.1 @EnableAutoConfiguration 拆解
 
 你一定写过这样的启动类：

@@ -1,3 +1,5 @@
+# RESTful 与内容协商
+
 ## @RestController 与 HttpMessageConverter
 
 上一章结尾我们提到了 `@RestController` 和 `@Controller` 的区别。这一章我们从根上把它讲透。

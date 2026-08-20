@@ -1,3 +1,5 @@
+# IoC 与依赖注入
+
 ## 对象为什么不能自己 new？
 
 写 Java 的人，谁都 new 过对象。`new UserService()` 一行代码，对象就活了，多简单。

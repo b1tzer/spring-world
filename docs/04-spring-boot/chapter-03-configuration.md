@@ -1,3 +1,5 @@
+# 配置体系
+
 ## 3.1 application.yml 优先级
 
 Spring Boot 支持多种配置文件格式：`application.properties`、`application.yml`、`application.yaml`。它们本质上是一样的，只是写法不同。推荐用 `yml`，层级更清晰。

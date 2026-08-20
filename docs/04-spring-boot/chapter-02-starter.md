@@ -1,3 +1,5 @@
+# Starter 机制
+
 ## 2.1 Starter 的命名规范
 
 在 Maven 仓库里搜 Spring Boot 相关的包，你会发现两类命名：
