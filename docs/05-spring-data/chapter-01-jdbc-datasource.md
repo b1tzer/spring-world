@@ -1,58 +1,24 @@
 # JdbcTemplate 与数据源
 
-## 第一章 JdbcTemplate 与数据源
+每个写过原生 JDBC 的人，都会对那段代码有 PTSD。
 
-### 1.1 原生 JDBC 的痛：样板代码能绕地球一圈
+一个简单的"按 ID 查用户"，你得先获取连接、创建 PreparedStatement、设置参数、执行查询、遍历 ResultSet、手动映射字段、最后在 finally 里依次关闭 ResultSet、PreparedStatement、Connection——少关一个就泄漏。真正干活的就两行，剩下的全是"仪式感"。
 
-每个写过原生 JDBC 的人，都会对这段代码有 PTSD：
+这不是夸张。你回忆一下自己写过的 DAO 层，有多少代码是在做"获取连接-关闭连接"这种重复劳动？改一个字段名，得改 N 个地方。加一个查询方法，又是那套 try-catch-finally 三件套。你不是在写业务逻辑，你是在写"数据库访问礼仪"。
 
-```java
-public User findById(Long id) {
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    try {
-        conn = dataSource.getConnection();
-        ps = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
-        ps.setLong(1, id);
-        rs = ps.executeQuery();
-        if (rs.next()) {
-            User user = new User();
-            user.setId(rs.getLong("id"));
-            user.setName(rs.getString("name"));
-            user.setEmail(rs.getString("email"));
-            return user;
-        }
-        return null;
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
-    } finally {
-        if (rs != null) try { rs.close(); } catch (SQLException ignored) {}
-        if (ps != null) try { ps.close(); } catch (SQLException ignored) {}
-        if (conn != null) try { conn.close(); } catch (SQLException ignored) {}
-    }
-}
-```
+Spring 的 JdbcTemplate 就是来把这些礼仪废掉的。
 
-一个简单的按 ID 查询，真正干活的就两行（执行查询、映射结果），剩下的全是获取连接、关闭资源、处理异常。而且这还没算上事务管理——你得自己调 `conn.setAutoCommit(false)`、`conn.commit()`、出错了还得 `conn.rollback()`。
+## 告别样板代码：JdbcTemplate 怎么做到三行查询
 
-这段代码有三个核心问题：
-
-1. **资源管理繁琐**：Connection、PreparedStatement、ResultSet 三件套，打开容易关闭难，finally 块比业务代码还长。
-2. **异常处理恶心**：`SQLException` 是 checked exception，到处 try-catch，但你其实也没什么好处理的——大多数情况下就是往上抛。
-3. **重复劳动**：每个 DAO 方法都写一遍这套模板，改一个字段名就得改 N 个地方。
-
-Spring 的 JdbcTemplate 就是来解决这些问题的。它的设计思路很直接：**把样板代码抽走，让你只写 SQL 和结果映射。**
-
-同样的查询，用 JdbcTemplate 写：
+同样的"按 ID 查用户"，JdbcTemplate 版本：
 
 ```java
 @Repository
 public class UserRepository {
-    
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
+
     public User findById(Long id) {
         return jdbcTemplate.queryForObject(
             "SELECT * FROM users WHERE id = ?",
@@ -63,12 +29,43 @@ public class UserRepository {
 }
 ```
 
-三行搞定。Connection 的获取和释放？JdbcTemplate 内部帮你处理了。异常？Spring 把 `SQLException` 转成了自己的 `DataAccessException` 体系（unchecked 的，你不用强制 catch）。结果映射？`BeanPropertyRowMapper` 通过反射自动把列值设到对象属性上。
+三行。Connection 的获取和释放？内部处理了。异常？Spring 把 `SQLException` 转成了自己的 `DataAccessException` 体系——unchecked 的，你不用强制 catch。结果映射？`BeanPropertyRowMapper` 通过反射自动把列值设到对象属性上。
 
-让我们看看 JdbcTemplate 常用的几个方法：
+来对比一下原生 JDBC 到底"疼"在哪：
+
+```mermaid
+sequenceDiagram
+    participant App as 应用代码
+    participant JDBC as 原生 JDBC
+    participant DB as 数据库
+
+    App->>JDBC: getConnection()
+    JDBC->>DB: TCP 三次握手 + 认证
+    DB-->>JDBC: 连接就绪
+    JDBC-->>App: Connection
+
+    App->>JDBC: prepareStatement("SELECT...")
+    JDBC-->>App: PreparedStatement
+
+    App->>JDBC: setLong(1, id)
+    App->>JDBC: executeQuery()
+    JDBC->>DB: 执行 SQL
+    DB-->>JDBC: ResultSet
+    JDBC-->>App: ResultSet
+
+    App->>App: 手动映射 rs.getString("name") → user.name
+    App->>JDBC: rs.close()
+    App->>JDBC: ps.close()
+    App->>JDBC: conn.close()
+    JDBC->>DB: 关闭连接
+```
+
+JdbcTemplate 帮你把上面虚线框里的"仪式"全包了，你只需要关注 SQL 和结果映射。
+
+来看看 JdbcTemplate 最常用的几个方法：
 
 ```java
-// 查询单个对象
+// 查询单个对象 —— 找不到会抛 EmptyResultDataAccessException
 User user = jdbcTemplate.queryForObject(
     "SELECT * FROM users WHERE id = ?",
     new BeanPropertyRowMapper<>(User.class),
@@ -88,40 +85,30 @@ jdbcTemplate.update(
     "张三", "zhangsan@example.com"
 );
 
-// 更新
-jdbcTemplate.update(
-    "UPDATE users SET name = ? WHERE id = ?",
-    "李四", 1L
-);
-
-// 删除
+// 更新 / 删除（同一个方法）
+jdbcTemplate.update("UPDATE users SET name = ? WHERE id = ?", "李四", 1L);
 jdbcTemplate.update("DELETE FROM users WHERE id = ?", 1L);
 
-// 查询单个值（比如 count）
-Long count = jdbcTemplate.queryForObject(
-    "SELECT COUNT(*) FROM users", Long.class
-);
+// 查询单个值
+Long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Long.class);
 ```
 
-注意一个细节：SQL 里的参数用 `?` 占位，JdbcTemplate 用 `PreparedStatement` 设置参数值，天然防 SQL 注入。有些人喜欢拼接字符串写 SQL——别这么干，JdbcTemplate 的占位符就是设计来替代这个的。
+注意一个细节：SQL 里的参数用 `?` 占位，底层走的是 `PreparedStatement`，天然防 SQL 注入。有些人图省事拼接字符串写 SQL——别这么干，JdbcTemplate 的占位符就是设计来替代这个的。
 
-`BeanPropertyRowMapper` 要求数据库列名和 Java 属性名对应（默认按驼峰转换，`user_name` → `userName`）。如果你的命名不规范，可以自己实现 `RowMapper`：
+`BeanPropertyRowMapper` 要求数据库列名和 Java 属性名对应，默认按驼峰转换（`user_name` → `userName`）。如果你的命名不规范（比如数据库里叫 `usr_nm`），可以自己实现 `RowMapper`：
 
 ```java
 RowMapper<User> userRowMapper = (rs, rowNum) -> {
     User user = new User();
     user.setId(rs.getLong("id"));
-    user.setName(rs.getString("name"));
-    user.setEmail(rs.getString("email"));
+    user.setName(rs.getString("usr_nm"));
     return user;
 };
 ```
 
-这就是一个 lambda 版的 RowMapper，本质上就是把原来 JDBC 代码里 `if (rs.next())` 后面的映射逻辑抽出来了。
+**我的判断**：JdbcTemplate 在今天依然有它的位置。不是所有项目都需要 JPA 或 MyBatis 那套抽象层。如果你的 SQL 不复杂、不想引入 ORM 框架、或者在写一些工具类和脚手架代码，JdbcTemplate 是最轻量的选择——学习成本几乎为零，你只要会写 SQL 就行。
 
-**我的判断**：JdbcTemplate 在 2024 年依然有它的位置。不是所有项目都需要 JPA 或 MyBatis 那套抽象。如果你的 SQL 不复杂、不想引入 ORM 框架、或者在写一些工具类/脚手架代码，JdbcTemplate 是最轻量的选择。它的学习成本几乎为零——你只要会写 SQL 就行。
-
-### 1.2 数据源：为什么不能每次都 new Connection？
+## 连接池：为什么不能每次都 new Connection
 
 假设你写了一个最简单的数据库连接：
 
@@ -144,18 +131,18 @@ sequenceDiagram
     participant DB as 数据库
 
     Note over Pool: 启动时预创建 N 个连接
-    Pool->>DB: 建立连接1
-    Pool->>DB: 建立连接2
-    Pool->>DB: 建立连接N
-    
+    Pool->>DB: 建立连接 1
+    Pool->>DB: 建立连接 2
+    Pool->>DB: 建立连接 N
+
     App->>Pool: 借连接
-    Pool-->>App: 返回连接1（借出）
+    Pool-->>App: 返回连接 1（借出）
     App->>DB: 执行 SQL（复用已有连接）
     App->>Pool: 还连接
-    Note over Pool: 连接1回到池中，等待下一个请求
+    Note over Pool: 连接 1 回到池中，等待下一个请求
 ```
 
-Spring Boot 默认使用 HikariCP 作为连接池（从 Spring Boot 2.0 开始）。配置方式：
+Spring Boot 默认使用 HikariCP 作为连接池（从 2.0 开始）。配置方式：
 
 ```yaml
 spring:
@@ -171,7 +158,7 @@ spring:
       max-lifetime: 1800000        # 连接最大存活时间
 ```
 
-HikariCP 为什么是默认选择？快。它的作者 Brett Wooldridge 做了大量极端优化：使用 `ConcurrentBag` 替代 `BlockingQueue`、用 `javassist` 生成代理类避免反射、字节码级别优化。在大多数基准测试中，HikariCP 的吞吐量是其他连接池的 2-3 倍，延迟也更低。
+HikariCP 为什么是默认选择？一个字：快。它的作者做了大量极端优化——用 `ConcurrentBag` 替代 `BlockingQueue`、用 `javassist` 生成代理类避免反射、字节码级别优化。在大多数基准测试中，HikariCP 的吞吐量是其他连接池的 2-3 倍。
 
 国内项目常用 Druid，阿里巴巴开源的。Druid 的优势不在速度（比 HikariCP 慢一些），而在**监控**。它内置了一个 Web 监控页面，能看 SQL 执行统计、慢查询、连接池状态：
 
@@ -182,7 +169,6 @@ spring:
       initial-size: 5
       max-active: 20
       min-idle: 5
-      # 监控页面
       stat-view-servlet:
         enabled: true
         url-pattern: /druid/*
@@ -192,13 +178,13 @@ spring:
 
 加上 `druid-spring-boot-starter` 依赖，访问 `/druid` 就能看到监控面板。生产环境排查慢 SQL 非常好用。
 
-**选哪个？** 追求性能选 HikariCP（默认就好，不用额外配置）。需要 SQL 监控选 Druid。两者在功能上差别不大，性能差距在大多数场景下感知不到。不要花太多时间在这个选择上。
+**选哪个？** 追求性能选 HikariCP（默认就好，不用额外配置）。需要 SQL 监控选 Druid。两者在功能上差别不大，性能差距在大多数场景下感知不到。别花太多时间在这个选择上。
 
-### 1.3 多数据源：一个应用连两个数据库
+## 一个应用连两个数据库：多数据源配置
 
-现实场景：你的电商系统需要同时访问业务库（MySQL）和数据仓库（另一个 MySQL 实例，或者 PostgreSQL）。一个 `DataSource` 显然不够。
+一个真实场景：你的电商系统需要同时访问业务库（MySQL）和数据仓库（另一个 MySQL 实例）。一个 `DataSource` 显然不够。
 
-Spring Boot 的自动配置在单数据源时很方便，但多数据源需要你手动接管。核心思路：**禁用自动配置，手动创建多个 `DataSource` Bean，并分别绑定到各自的 `JdbcTemplate` 或 `EntityManager`。**
+Spring Boot 的自动配置在单数据源时很方便，但多数据源需要你手动接管。核心思路：**禁用自动配置，手动创建多个 DataSource Bean，并分别绑定到各自的 JdbcTemplate。**
 
 ```java
 @Configuration
@@ -274,20 +260,20 @@ public class OrderService {
             new BeanPropertyRowMapper<>(Order.class),
             orderId
         );
-        
+
         // 从数据仓库查分析数据
         Map<String, Object> stats = warehouseJdbc.queryForMap(
             "SELECT * FROM order_stats WHERE order_id = ?",
             orderId
         );
-        
+
         order.setStats(stats);
         return order;
     }
 }
 ```
 
-这里有个坑要注意：启动类上要排除 `DataSourceAutoConfiguration`，否则 Spring Boot 会尝试自动配置一个数据源，跟你手动定义的冲突：
+这里有个坑：启动类上要排除 `DataSourceAutoConfiguration`，否则 Spring Boot 会尝试自动配置一个数据源，跟你手动定义的冲突：
 
 ```java
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
@@ -298,8 +284,6 @@ public class Application {
 }
 ```
 
-多数据源场景下事务管理就复杂了。`@Transactional` 默认用的是主数据源的事务管理器。如果你需要跨数据源的分布式事务，要么用 JTA（太重了），要么在业务层手动控制：先在一个数据源操作，成功了再操作另一个，失败了手动回滚。大多数场景下，能做到单数据源内的事务就够了，跨数据源的操作尽量设计成最终一致的。
-
 ```mermaid
 graph TB
     subgraph "应用"
@@ -307,17 +291,17 @@ graph TB
         BJdbc[businessJdbcTemplate]
         WJdbc[warehouseJdbcTemplate]
     end
-    
+
     subgraph "数据源配置"
         BDS[businessDataSource]
         WDS[warehouseDataSource]
     end
-    
+
     subgraph "数据库"
         BDB[(business_db)]
         WDB[(warehouse_db)]
     end
-    
+
     Service --> BJdbc
     Service --> WJdbc
     BJdbc --> BDS
@@ -326,4 +310,6 @@ graph TB
     WDS --> WDB
 ```
 
-**什么时候需要多数据源？** 读写分离（主库写、从库读）、多租户（每个租户一个库）、微服务拆分过渡期（一个服务暂时连两个库）、数据迁移。如果不是这些场景，尽量不要搞多数据源——它会显著增加配置复杂度和运维成本。
+多数据源场景下事务管理就复杂了。`@Transactional` 默认用的是主数据源的事务管理器。跨数据源的分布式事务，要么用 JTA（太重了），要么在业务层手动控制。大多数场景下，能做到单数据源内的事务就够了，跨数据源的操作尽量设计成最终一致的。
+
+**什么时候需要多数据源？** 读写分离（主库写、从库读）、多租户（每个租户一个库）、微服务拆分过渡期（一个服务暂时连两个库）、数据迁移。如果不是这些场景，尽量不要搞——它会显著增加配置复杂度和运维成本。

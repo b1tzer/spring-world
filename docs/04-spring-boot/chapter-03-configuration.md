@@ -1,26 +1,29 @@
 # 配置体系
 
-## 3.1 application.yml 优先级
+一个真实的故事：线上有个服务，开发环境跑得好好的，部署到测试环境后数据库连不上。查了半天，发现 `application.yml` 里写的是 `spring.datasource.url`，但运维通过环境变量注入的是 `SPRING_DATASOURC_URL`——少了一个 `E`。环境变量的映射规则是 Spring Boot 自动做的，但运维不知道。
 
-Spring Boot 支持多种配置文件格式：`application.properties`、`application.yml`、`application.yaml`。它们本质上是一样的，只是写法不同。推荐用 `yml`，层级更清晰。
+配置这件事，看起来简单，实际上坑很多。Spring Boot 的配置体系设计得很灵活，但灵活意味着你得搞清楚规则，否则就是"灵活地出错"。
 
-但更让人困惑的问题是：**当有多个配置文件时，谁说了算？**
+## 配置文件的优先级：谁说了算
 
-Spring Boot 的配置来源多达 17 种，按优先级从高到低排列（摘最重要的几种）：
+Spring Boot 支持 `application.properties`、`application.yml`、`application.yaml` 三种格式，本质一样，推荐用 `yml`——层级更清晰，写起来更舒服。
+
+但真正让人困惑的问题是：**当有多个配置来源时，谁说了算？**
+
+Spring Boot 的配置来源多达 17 种，记住最重要的几种就够了：
 
 | 优先级 | 来源 | 说明 |
 |--------|------|------|
 | 1（最高） | 命令行参数 | `--server.port=9090` |
 | 2 | 系统属性 | `-Dserver.port=9090` |
 | 3 | 环境变量 | `SERVER_PORT=9090` |
-| 4 | `application-{profile}.yml` | 对应 profile 的配置文件 |
+| 4 | `application-{profile}.yml` | profile 专属配置 |
 | 5 | `application.yml` | 主配置文件 |
-| 6 | `@PropertySource` | 代码中指定的配置文件 |
-| 7（最低） | 默认值 | 代码中写的默认值 |
+| 6（最低） | 默认值 | 代码里写的默认值 |
 
-**核心规则：优先级高的覆盖优先级低的，不是替换，是合并。**
+**核心规则：优先级高的覆盖优先级低的，但不是替换，是合并。**
 
-举个例子，你有一个 `application.yml`：
+举个例子，`application.yml` 里写了：
 
 ```yaml
 server:
@@ -32,37 +35,39 @@ app:
   debug: false
 ```
 
-然后启动时加了命令行参数：
+启动时加了命令行参数：
 
 ```bash
 java -jar myapp.jar --server.port=9090 --app.debug=true
 ```
 
-最终生效的配置是：
+最终生效的配置：
 
 ```yaml
 server:
-  port: 9090         # 命令行覆盖了 yml
+  port: 9090           # 命令行覆盖了 yml
   servlet:
     context-path: /api  # yml 的值保留
 app:
-  name: my-service   # yml 的值保留
-  debug: true        # 命令行覆盖了 yml
+  name: my-service     # yml 的值保留
+  debug: true          # 命令行覆盖了 yml
 ```
 
-**不会因为命令行参数覆盖了 `server.port`，就把整个 `server` 节点都替换成只有 `port` 的子集。** 每个配置项独立比较优先级。
+**不会因为命令行覆盖了 `server.port`，就把整个 `server` 节点都替换了。** 每个配置项独立比较优先级。这一点很多人搞不清楚。
 
-环境变量的映射规则需要知道：Spring Boot 会把 `.` 替换成 `_`，把 `-` 去掉，全大写。所以：
+### 环境变量的映射规则
+
+在 Docker 和 Kubernetes 环境里，环境变量是注入配置的标准方式。Spring Boot 的映射规则是：把 `.` 替换成 `_`，把 `-` 去掉，全大写。
 
 - `server.port` → `SERVER_PORT`
 - `spring.datasource.url` → `SPRING_DATASOURCE_URL`
-- `app.my-config` → `APPMYCONFIG`（注意 `-` 被去掉了）
+- `app.my-config` → `APPMYCONFIG`
 
-这在 Docker 和 Kubernetes 环境里特别常用，因为环境变量是容器注入配置的标准方式。
+注意最后一条：**`-` 被去掉了**。这就是开头那个故事的根源——运维按直觉猜环境变量名，猜错了。
 
-### 多 profile 配置文件
+### 多 Profile 配置文件
 
-除了 `application.yml`，你还可以创建 profile 专属的配置文件：
+除了 `application.yml`，你可以创建 profile 专属的配置文件：
 
 ```
 application.yml          # 公共配置
@@ -71,7 +76,7 @@ application-test.yml     # 测试环境
 application-prod.yml     # 生产环境
 ```
 
-**`application.yml` 和 `application-{profile}.yml` 是合并关系，不是替换关系。** profile 配置文件会覆盖 `application.yml` 中的同名配置项，没有冲突的部分保留 `application.yml` 的值。
+**`application.yml` 和 `application-{profile}.yml` 是合并关系，不是替换关系。** profile 配置覆盖 `application.yml` 中的同名项，没有冲突的部分保留。
 
 一个典型的用法：
 
@@ -99,14 +104,11 @@ spring:
 logging:
   level:
     root: DEBUG
-    com.example: DEBUG
 ```
 
 ```yaml
 # application-prod.yml — 生产环境
 spring:
-  jpa:
-    show-sql: false
   datasource:
     url: jdbc:mysql://prod-db:3306/prod_db
     username: ${DB_USER}
@@ -114,32 +116,24 @@ spring:
 logging:
   level:
     root: WARN
-    com.example: INFO
 ```
 
-这样公共配置只写一次，环境差异部分各自独立，清晰又不重复。
+公共配置只写一次，环境差异各自独立。这个模式你以后会反复用。
 
-## 3.2 @ConfigurationProperties
+## @ConfigurationProperties：类型安全的配置绑定
 
-在 `application.yml` 里写了配置，怎么在代码里用？两种方式：
+在 `application.yml` 里写了配置，怎么在代码里用？两种方式，但差距很大。
 
-### 方式一：@Value（简单但有限）
+### @Value：能用，但别滥用
 
 ```java
 @Value("${app.name}")
 private String appName;
-
-@Value("${server.port}")
-private int port;
 ```
 
-能用，但有几个问题：
-- 配置项多了，到处写 `@Value`，维护困难。
-- 没有 IDE 自动提示（不知道有哪些配置项可以用）。
-- 不支持复杂结构（嵌套对象、列表）。
-- 默认值写在注解里，和配置文件割裂。
+简单场景够用，但有几个问题：配置项多了到处写 `@Value`，维护困难；没有 IDE 自动提示；不支持复杂结构（嵌套对象、列表）；默认值写在注解里，和配置文件割裂。
 
-### 方式二：@ConfigurationProperties（推荐）
+### @ConfigurationProperties：推荐
 
 ```java
 @ConfigurationProperties(prefix = "app")
@@ -151,7 +145,6 @@ public class AppProperties {
     private List<String> servers = new ArrayList<>();
     private Map<String, String> metadata = new HashMap<>();
 
-    // 内嵌对象
     private Security security = new Security();
 
     public static class Security {
@@ -164,7 +157,7 @@ public class AppProperties {
 }
 ```
 
-对应的 `application.yml`：
+对应 `application.yml`：
 
 ```yaml
 app:
@@ -182,32 +175,29 @@ app:
     timeout: 5000
 ```
 
-注册方式：
+注册方式有两种。第一种，配合 `@EnableConfigurationProperties`：
 
 ```java
 @EnableConfigurationProperties(AppProperties.class)
 @Configuration
 public class AppConfig {
-    // ...
 }
 ```
 
-或者直接在属性类上加 `@Component`：
+第二种，直接加 `@Component`：
 
 ```java
 @Component
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
-    // ...
 }
 ```
 
-`@ConfigurationProperties` 的优势：
+我更推荐第一种——语义更清晰，"这个属性类是被配置体系启用的"，而不是"它是一个普通的 Spring Bean"。
 
-1. **类型安全**：`name` 就是 `String`，`debug` 就是 `boolean`，编译期就能检查。
-2. **IDE 支持**：引入 `spring-boot-configuration-processor` 依赖后，IDE 能自动提示 `app.*` 下有哪些配置项。
-3. **支持复杂结构**：嵌套对象、List、Map 都能自动绑定。
-4. **支持 JSR-303 校验**：
+`@ConfigurationProperties` 的优势在于**类型安全**。`name` 就是 `String`，`debug` 就是 `boolean`，编译期就能检查。引入 `spring-boot-configuration-processor` 依赖后，IDE 还能自动提示 `app.*` 下有哪些配置项——这在配置项多的时候非常救命。
+
+### JSR-303 校验：fail-fast 比 fail-silent 好一万倍
 
 ```java
 @ConfigurationProperties(prefix = "app")
@@ -225,9 +215,9 @@ public class AppProperties {
 }
 ```
 
-启动时如果配置不合法，直接抛异常，不会带着错误配置跑起来。这在生产环境非常有用——**fail-fast 比 fail-silent 好一万倍**。
+启动时如果配置不合法，直接抛异常，不会带着错误配置跑起来。**在生产环境，一个配置错误导致的静默失败，比启动失败难排查一百倍。**
 
-来看一个完整的使用流程：
+整个绑定流程：
 
 ```mermaid
 graph LR
@@ -240,11 +230,11 @@ graph LR
     G --> H["代码中直接调用 getter"]
 ```
 
-## 3.3 配置加密与敏感信息
+## 配置加密：密码不能明文
 
-数据库密码、API Key、第三方服务密钥——这些敏感信息放在 `application.yml` 里是明文的，代码一提交到 Git，所有人都能看到。这是安全隐患。
+数据库密码、API Key、第三方服务密钥——这些敏感信息放在 `application.yml` 里是明文的，代码一提交到 Git，所有人都能看到。这是安全隐患，不是"可能"，是"一定"。
 
-### 方案一：环境变量（最简单）
+### 环境变量：最简单的方式
 
 ```yaml
 spring:
@@ -263,9 +253,9 @@ java -jar myapp.jar
 
 优点：简单直接，密码不出现在代码里。缺点：环境变量在某些场景下也容易泄露（`/proc/1/environ`、日志、调试工具）。
 
-### 方案二：Jasypt 加密（推荐）
+### Jasypt 加密：推荐方案
 
-[Jasypt](http://www.jasypt.org/)（Java Simplified Encryption）是 Java 世界里最常用的配置加密方案。Spring Boot 有对应的集成库。
+[Jasypt](http://www.jasypt.org/)（Java Simplified Encryption）是 Java 世界最常用的配置加密方案。
 
 引入依赖：
 
@@ -277,7 +267,7 @@ java -jar myapp.jar
 </dependency>
 ```
 
-先用工具加密你的密码：
+先加密你的密码：
 
 ```bash
 java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI \
@@ -286,9 +276,9 @@ java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI \
     algorithm=PBEWithMD5AndDES
 ```
 
-输出类似：`ENC(G6N718/uNv2p8VzYkPL0hQ==)`
+输出：`ENC(G6N718/uNv2p8VzYkPL0hQ==)`
 
-然后在 `application.yml` 里这样写：
+然后在 `application.yml` 里：
 
 ```yaml
 spring:
@@ -300,7 +290,7 @@ jasypt:
     password: ${JASYPT_KEY}  # 加密密钥通过环境变量传入
 ```
 
-应用启动时，Jasypt 会自动识别 `ENC(...)` 格式的值，用加密密钥解密后注入。对业务代码完全透明，你拿到的 `password` 属性就是解密后的明文。
+应用启动时，Jasypt 自动识别 `ENC(...)` 格式的值，解密后注入。对业务代码完全透明。
 
 加密密钥本身怎么传？**绝对不要写在配置文件里**，通过环境变量或启动参数传入：
 
@@ -308,9 +298,9 @@ jasypt:
 java -DJASYPT_KEY=my-encryption-key -jar myapp.jar
 ```
 
-### 方案三：Vault（企业级）
+### Vault：企业级方案
 
-如果你的团队使用 HashiCorp Vault 这样的密钥管理服务，Spring Cloud Vault 可以直接从 Vault 拉取密钥：
+如果你的团队使用 HashiCorp Vault，Spring Cloud Vault 可以直接从 Vault 拉取密钥：
 
 ```yaml
 spring:
@@ -334,9 +324,9 @@ spring:
 
 不管用哪种方案，有一个原则：**密码永远不要以明文形式出现在代码仓库里。** 这不是建议，是底线。
 
-## 3.4 配置加载的整体流程
+## 配置加载的完整流程
 
-最后用一张图总结 Spring Boot 配置体系的加载流程：
+最后用一张图把整个配置体系串起来：
 
 ```mermaid
 graph TD
@@ -351,4 +341,4 @@ graph TD
     I --> J["Bean 可用"]
 ```
 
-**配置体系不是什么黑魔法，本质就是一个多源的 PropertySource 合并机制。** 理解了优先级规则和绑定方式，你就能灵活应对各种配置场景。
+**配置体系的本质就是一个多源的 PropertySource 合并机制。** 理解了优先级规则和绑定方式，你就能灵活应对各种配置场景——也能在配置"不生效"的时候，快速定位是哪个环节出了问题。
